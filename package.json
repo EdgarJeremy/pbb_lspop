@@ -1,0 +1,25 @@
+{
+  "name": "pbb_lspop",
+  "version": "1.0.0",
+  "description": "PBB Webapp for LSPOP form",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EdgarJeremy/pbb_lspop.git"
+  },
+  "keywords": [
+    "pajak",
+    "lspop",
+    "bumi",
+    "bangunan"
+  ],
+  "author": "EdgarJeremy",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/EdgarJeremy/pbb_lspop/issues"
+  },
+  "homepage": "https://github.com/EdgarJeremy/pbb_lspop#readme"
+}
