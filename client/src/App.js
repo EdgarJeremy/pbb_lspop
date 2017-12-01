@@ -1,34 +1,19 @@
 import React, { Component } from 'react';
-import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
-import { Card, CardActions, CardHeader, CardText } from "material-ui/Card";
-import Grid from "material-ui/Grid";
-import "./assets/css/styles.css";
+import {BrowserRouter as Router, Route} from "react-router-dom";
+import Home from './containers/Home';
+import Login from './containers/Login';
+import Spop from './containers/Spop';
 
 class App extends Component {
   render() {
     return (
-      <MuiThemeProvider>
-        <div className="container card-flat">
-          <div className="logo-container">
-            <img className="logo-image" src={require("./assets/images/logo.png")} alt="Logo" />
-          </div>
-          <hr style={{ marginTop: 30, marginBottom: 30 }} />
-          <Grid container spacing={8}>
-            <Grid item lg={6}>
-              <h2>tst</h2>
-              {/* <Card>
-                <h2>LSPOP</h2>
-              </Card> */}
-            </Grid>
-            <Grid item lg={6}>
-            <h2>tst</h2>
-            {/* <Card>
-              <h2>LSPOP</h2>
-            </Card> */}
-            </Grid>
-          </Grid>
+      <Router>
+        <div>
+          <Route exact path="/" component={Home}/>
+          <Route exact path="/login" component={Login} />
+          <Route exact path="/spop" component={Spop} />
         </div>
-      </MuiThemeProvider>
+      </Router>
     );
   }
 }

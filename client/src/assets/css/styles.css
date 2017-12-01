@@ -1,7 +1,8 @@
 @import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro');
 
 body {
-    background-color: #fbfbfb;
+    /* background-color: #fbfbfb; */
+    background-color: #3498db;
 }
 
 body,h1,h2,h3,h4,h5,h6,pre,p,a,form,input {
@@ -9,18 +10,119 @@ body,h1,h2,h3,h4,h5,h6,pre,p,a,form,input {
     margin: 0;
     font-family: 'Source Sans Pro', sans-serif !important;
 }
+a {
+    color: #3498db;
+    text-decoration: none;
+}
+a:hover {
+    color: #2980b9;
+    text-decoration: underline;
+}
 .container {
-    max-width: 780px;
     margin: 0 auto;
 }
 .card-flat {
-    margin-top: 100px;
-    background-color: #fff;
-    padding: 50px;
+    max-width: 420px;
+    margin-top: 60px;
+    background-color: #ecf0f1;
+    padding: 20px;
 }
 .logo-container {
     text-align: center;
 }
 .logo-image {
-    width: 70%
+    width: 60%;
+}
+.boxes {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+.card-header {
+    padding: 10px;
+    /* background-color: #000000; */
+    /* color: #fff; */
+    text-align: center;
+    border-bottom: 1px solid #dddddd;
+    font-weight: lighter;
+}
+.card-header h2 {
+    font-weight: lighter;
+}
+.card-body {
+    text-align: center;
+    padding: 15px;
+}
+.card-icon {
+    width: 60%;
+}
+.foot-container {
+    text-align: center;
+}
+.card-form {
+    padding: 0 30px;
+}
+.card-form h3 {
+    text-align: center;
+}
+.card-wide {
+    max-width: 1200px;
+    margin: 0 auto;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    background-color: #ecf0f1;
+}
+.heading-container {
+    display: inline-block;
+    border-bottom: 1px solid #bbbbbb;
+    padding: 20px;
+    width: 100%;
+}
+.heading-container .left {
+    float: left;
+    width: 30%;
+}
+.heading-container .right {
+    float: right;
+    width: 70%;
+}
+.heading-container img {
+    width: 20%;
+    float: right;
+}
+.heading-container .left h3 {
+    color: #3498db;
+}
+.body-container {
+    padding: 20px;
+}
+.form-section {
+    background-color: #222;
+    color: #fff;
+    padding: 10px;
+}
+.form-body {
+    padding: 10px;
+}
+.form-body tr {
+    margin-bottom: 10px;
+    display: block;
+}
+.form-body tr td:first-child {
+    width: 200px;
+}
+span.overlay {
+    background-color: #2980b9;
+    color: #fff;
+    padding: 5px;
+}
+.form-body .nops input {
+    text-align: center;
+}
+.foot-container-wide {
+    padding: 20px;
+    text-align: left;
+    border-top: 1px solid #bbb;
+}
+.foot-container-wide p {
+    color: #e67e22;
 }
