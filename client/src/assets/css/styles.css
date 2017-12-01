@@ -99,6 +99,7 @@ a:hover {
     background-color: #222;
     color: #fff;
     padding: 10px;
+    text-align: center;
 }
 .form-body {
     padding: 10px;
@@ -114,6 +115,7 @@ span.overlay {
     background-color: #2980b9;
     color: #fff;
     padding: 5px;
+    display: inline-block;
 }
 .form-body .nops input {
     text-align: center;
@@ -125,4 +127,7 @@ span.overlay {
 }
 .foot-container-wide p {
     color: #e67e22;
+}
+.form-body table {
+    width: 100%;
 }
