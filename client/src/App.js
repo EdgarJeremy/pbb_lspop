@@ -4,6 +4,7 @@ import Home from './containers/Home';
 import Login from './containers/Login';
 import Spop from './containers/Spop';
 import Lspop from './containers/Lspop';
+import Admin from "./containers/Admin";
 
 class App extends Component {
   render() {
@@ -11,9 +12,10 @@ class App extends Component {
       <Router>
         <div>
           <Route exact path="/" component={Home}/>
-          <Route exact path="/login" component={Login} />
-          <Route exact path="/spop" component={Spop} />
-          <Route exact path="/lspop" component={Lspop} />
+          <Route path="/login" component={Login} />
+          <Route path="/spop" component={Spop} />
+          <Route path="/lspop" component={Lspop} />
+          <Route path="/admin" component={Admin} />
         </div>
       </Router>
     );

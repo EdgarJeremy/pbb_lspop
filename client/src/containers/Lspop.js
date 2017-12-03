@@ -12,11 +12,51 @@ import { Link } from "react-router-dom";
 export default class Lspop extends React.Component {
 
     state = {
-        jenis_formulir: "LSPOP",
-        jenis_transaksi: "Perekaman data bangunan",
-        jenis_bangunan: "JPB01 - Perumahan",
-        konstruksi: "1 - Baja",
-        atap: null
+        form_data: { nop: [], ac_central: false, pemadam_kebakaran_hydrant: false, pemadam_kebakaran_sprinkler: false, pemadam_kebakaran_fire_alarm: false },
+        error_fields: {}
+    }
+
+    constructor(props) {
+        super(props);
+        this.changeSelect = this.changeSelect.bind(this);
+        this.changeNop = this.changeNop.bind(this);
+        this.onChangeText = this.onChangeText.bind(this);
+        this.onSubmit = this.onSubmit.bind(this);
+        this.onCheck = this.onCheck.bind(this);
+    }
+
+    changeSelect(name) {
+        return (e, i, v) => {
+            const { form_data } = this.state;
+            form_data[name] = v;
+            this.setState({ form_data });
+        }
+    }
+
+    changeNop(name, index) {
+        return (e, v) => {
+            const { form_data } = this.state;
+            form_data[name][index] = v;
+            this.setState({ form_data });
+        }
+    }
+
+    onChangeText(e, v) {
+        const { form_data } = this.state;
+        form_data[e.target.name] = v;
+        this.setState({ form_data });
+    }
+
+    onCheck(name) {
+        return (e, b) => {
+            const { form_data } = this.state;
+            form_data[name] = !form_data[name];
+            this.setState({ form_data });
+        }
+    }
+
+    onSubmit() {
+        console.log(this.state.form_data);
     }
 
     render() {
@@ -56,8 +96,9 @@ export default class Lspop extends React.Component {
                                             <td><span className="overlay">JENIS FORMULIR</span></td>
                                             <td>
                                                 <SelectField
-                                                    value={this.state.jenis_formulir}
-                                                    onChange={(e, i, v) => this.setState({ jenis_formulir: v })}>
+                                                    errorText={this.state.error_fields.jenis_formulir}
+                                                    value={this.state.form_data.jenis_formulir}
+                                                    onChange={this.changeSelect("jenis_formulir")}>
                                                     <MenuItem value="LSPOP" primaryText="LSPOP" />
                                                 </SelectField>
                                             </td>
@@ -66,8 +107,9 @@ export default class Lspop extends React.Component {
                                             </td>
                                             <td>
                                                 <SelectField
-                                                    value={this.state.jenis_transaksi}
-                                                    onChange={(e, i, v) => this.setState({ jenis_transaksi: v })}>
+                                                    errorText={this.state.error_fields.jenis_transaksi}
+                                                    value={this.state.form_data.jenis_transaksi}
+                                                    onChange={this.changeSelect("jenis_transaksi")}>
                                                     <MenuItem value="Perekaman data bangunan" primaryText="Perekaman data bangunan" />
                                                     <MenuItem value="Pemutakhiran data bangunan" primaryText="Pemutakhiran data bangunan" />
                                                 </SelectField>
@@ -76,13 +118,13 @@ export default class Lspop extends React.Component {
                                         <tr>
                                             <td><span className="overlay">NOP</span></td>
                                             <td className="nops">
-                                                <TextField style={{ width: 50 }} /> -
-                                                <TextField style={{ width: 50 }} /> -
-                                                <TextField style={{ width: 50 }} /> -
-                                                <TextField style={{ width: 50 }} /> -
-                                                <TextField style={{ width: 50 }} /> -
-                                                <TextField style={{ width: 50 }} /> -
-                                                <TextField style={{ width: 50 }} />
+                                                <TextField name="nop_0" style={{ width: 50 }} onChange={this.changeNop("nop", 0)} /> -
+                                                <TextField name="nop_1" style={{ width: 50 }} onChange={this.changeNop("nop", 1)} /> -
+                                                <TextField name="nop_2" style={{ width: 50 }} onChange={this.changeNop("nop", 2)} /> -
+                                                <TextField name="nop_3" style={{ width: 50 }} onChange={this.changeNop("nop", 3)} /> -
+                                                <TextField name="nop_4" style={{ width: 50 }} onChange={this.changeNop("nop", 4)} /> -
+                                                <TextField name="nop_5" style={{ width: 50 }} onChange={this.changeNop("nop", 5)} /> -
+                                                <TextField name="nop_6" style={{ width: 50 }} onChange={this.changeNop("nop", 6)} />
                                             </td>
                                         </tr>
                                     </thead>
@@ -101,12 +143,13 @@ export default class Lspop extends React.Component {
                                     <thead>
                                         <tr>
                                             <td><span className="overlay">NOMOR BANGUNAN</span></td>
-                                            <td width="300px"><TextField /></td>
+                                            <td width="300px"><TextField errorText={this.state.error_fields.nomor_bangunan} name="nomor_bangunan" onChange={this.onChangeText} /></td>
                                             <td width="200px"><span className="overlay">KONSTRUKSI</span></td>
                                             <td>
                                                 <SelectField
-                                                    value={this.state.konstruksi}
-                                                    onChange={(e, i, v) => this.setState({ konstruksi: v })}>
+                                                    errorText={this.state.error_fields.konstruksi}
+                                                    value={this.state.form_data.konstruksi}
+                                                    onChange={this.changeSelect("konstruksi")}>
                                                     <MenuItem value="1 - Baja" primaryText="1 - Baja" />
                                                     <MenuItem value="2 - Beton" primaryText="2 - Beton" />
                                                     <MenuItem value="3 - Batu Bata" primaryText="3 - Batu Bata" />
@@ -118,11 +161,11 @@ export default class Lspop extends React.Component {
                                             <td width="200px"><span className="overlay">JENIS BANGUNAN</span></td>
                                             <td width="300px">
                                                 <SelectField
-                                                    name="jenis_bangunan"
                                                     maxHeight={200}
                                                     autoWidth={true}
-                                                    value={this.state.jenis_bangunan}
-                                                    onChange={(e, i, v) => this.setState({ jenis_bangunan: v })}>
+                                                    errorText={this.state.error_fields.jenis_bangunan}
+                                                    value={this.state.form_data.jenis_bangunan}
+                                                    onChange={this.changeSelect("jenis_bangunan")}>
                                                     <MenuItem value="JPB01 - Perumahan" primaryText="JPB01 - Perumahan" />
                                                     <MenuItem value="JPB02 - Perkantoran Swasta" primaryText="JPB02 - Perkantoran Swasta" />
                                                     <MenuItem value="JPB03 - Pabrik" primaryText="JPB02 - Pabrik" />
@@ -145,8 +188,9 @@ export default class Lspop extends React.Component {
                                             <td>
                                                 <SelectField
                                                     autoWidth
-                                                    value={this.state.atap}
-                                                    onChange={(e, i, v) => this.setState({ atap: v })}>
+                                                    errorText={this.state.error_fields.atap}
+                                                    value={this.state.form_data.atap}
+                                                    onChange={this.changeSelect("atap")}>
                                                     <MenuItem value="1 - Decrabon/Beton/GTG Glazur" primaryText="1 - Decrabon/Beton/GTG Glazur" />
                                                     <MenuItem value="2 - GTG Beton/Aluminium" primaryText="2 - GTG Beton/Aluminium" />
                                                     <MenuItem value="3 - GTG Biasa/Sirap" primaryText="3 - GTG Biasa/Sirap" />
@@ -157,13 +201,14 @@ export default class Lspop extends React.Component {
                                         </tr>
                                         <tr>
                                             <td><span className="overlay">LUAS BANGUNAN</span></td>
-                                            <td width="300px"><TextField /></td>
+                                            <td width="300px"><TextField errorText={this.state.error_fields.luas_bangunan} name="luas_bangunan" onChange={this.onChangeText} /></td>
                                             <td width="200px"><span className="overlay">DINDING</span></td>
                                             <td>
                                                 <SelectField
                                                     autoWidth
-                                                    value={this.state.dinding}
-                                                    onChange={(e, i, v) => this.setState({ dinding: v })}>
+                                                    errorText={this.state.error_fields.dinding}
+                                                    value={this.state.form_data.dinding}
+                                                    onChange={this.changeSelect("dinding")}>
                                                     <MenuItem value="1 - Kaca/Aluminium" primaryText="1 - Kaca/Aluminium" />
                                                     <MenuItem value="2 - Beton" primaryText="2 - Beton" />
                                                     <MenuItem value="3 - Batu Bata/Conblok" primaryText="3 - Batu Bata/Conblok" />
@@ -175,13 +220,14 @@ export default class Lspop extends React.Component {
                                         </tr>
                                         <tr>
                                             <td><span className="overlay">TAHUN DIBANGUN</span></td>
-                                            <td width="300px"><TextField /></td>
+                                            <td width="300px"><TextField errorText={this.state.error_fields.tahun_dibangun} name="tahun_dibangun" onChange={this.onChangeText} /></td>
                                             <td width="200px"><span className="overlay">LANTAI</span></td>
                                             <td>
                                                 <SelectField
                                                     autoWidth
-                                                    value={this.state.lantai}
-                                                    onChange={(e, i, v) => this.setState({ lantai: v })}>
+                                                    errorText={this.state.error_fields.lantai}
+                                                    value={this.state.form_data.lantai}
+                                                    onChange={this.changeSelect("lantai")}>
                                                     <MenuItem value="1 - Marmer" primaryText="1 - Marmer" />
                                                     <MenuItem value="2 - Keramik" primaryText="2 - Keramik" />
                                                     <MenuItem value="3 - Teraso" primaryText="3 - Teraso" />
@@ -195,8 +241,9 @@ export default class Lspop extends React.Component {
                                             <td width="300px">
                                                 <SelectField
                                                     autoWidth
-                                                    value={this.state.kondisi_bangunan}
-                                                    onChange={(e, i, v) => this.setState({ kondisi_bangunan: v })}>
+                                                    errorText={this.state.error_fields.kondisi_bangunan}
+                                                    value={this.state.form_data.kondisi_bangunan}
+                                                    onChange={this.changeSelect("kondisi_bangunan")}>
                                                     <MenuItem value="1 - Sangat Baik" primaryText="1 - Sangat Baik" />
                                                     <MenuItem value="2 - Baik" primaryText="2 - Baik" />
                                                     <MenuItem value="3 - Sedang" primaryText="3 - Sedang" />
@@ -207,8 +254,9 @@ export default class Lspop extends React.Component {
                                             <td>
                                                 <SelectField
                                                     autoWidth
-                                                    value={this.state.langit_langit}
-                                                    onChange={(e, i, v) => this.setState({ langit_langit: v })}>
+                                                    errorText={this.state.error_fields.langit_langit}
+                                                    value={this.state.form_data.langit_langit}
+                                                    onChange={this.changeSelect("langit_langit")}>
                                                     <MenuItem value="1 - Marmer" primaryText="1 - Marmer" />
                                                     <MenuItem value="2 - Keramik" primaryText="2 - Keramik" />
                                                     <MenuItem value="3 - Teraso" primaryText="3 - Teraso" />
@@ -219,9 +267,9 @@ export default class Lspop extends React.Component {
                                         </tr>
                                         <tr>
                                             <td><span className="overlay">JUMLAH LANTAI</span></td>
-                                            <td width="300px"><TextField /></td>
+                                            <td width="300px"><TextField errorText={this.state.error_fields.jumlah_lantai} name="jumlah_lantai" onChange={this.onChangeText} /></td>
                                             <td width="200px"><span className="overlay">TAHUN RENOVASI</span></td>
-                                            <td><TextField /></td>
+                                            <td><TextField errorText={this.state.error_fields.tahun_renovasi} name="tahun_renovasi" onChange={this.onChangeText} /></td>
                                         </tr>
                                     </thead>
                                 </table>
@@ -237,97 +285,106 @@ export default class Lspop extends React.Component {
                             <div className="form-body">
                                 <table>
                                     <thead>
-                                        <tr style={{paddingTop: "30px"}}>
+                                        <tr style={{ paddingTop: "30px" }}>
                                             <td><span className="overlay">DAYA LISTRIK</span></td>
-                                            <td width="300px"><TextField placeholder="Watt" /></td>
+                                            <td width="300px"><TextField errorText={this.state.error_fields.daya_listrik} name="daya_listrik" onChange={this.onChangeText} placeholder="Watt" /></td>
                                             <td width="200px"><span className="overlay">JUMLAH AC</span></td>
                                             <td className="nops">
-                                                <TextField style={{ width: "41%" }} placeholder="Split" /> -
-                                                <TextField style={{ width: "41%" }} placeholder="Window" />
+                                                <TextField errorText={this.state.error_fields.jumlah_ac_split} name="jumlah_ac_split" onChange={this.onChangeText} style={{ width: "41%" }} placeholder="Split" /> -
+                                                <TextField errorText={this.state.error_fields.jumlah_ac_window} name="jumlah_ac_window" onChange={this.onChangeText} style={{ width: "41%" }} placeholder="Window" />
                                             </td>
                                         </tr>
                                         <tr>
                                             <td><span className="overlay">AC CENTRAL</span></td>
                                             <td width="300px">
                                                 <Checkbox
-                                                    label="Tidak ada AC Central"
+                                                    onCheck={this.onCheck("ac_central")}
+                                                    checked={this.state.form_data.ac_central}
+                                                    label="Ada AC Central"
                                                 />
                                             </td>
                                             <td width="200px"><span className="overlay">LUAS KOLAM RENANG</span></td>
-                                            <td><TextField placeholder="m2" /></td>
+                                            <td><TextField errorText={this.state.error_fields.luas_kolam_renang} type="number" name="luas_kolam_renang" onChange={this.onChangeText} placeholder="m2" /></td>
                                         </tr>
-                                        <tr style={{ paddingBottom: "30px",borderBottom: "5px solid #222" }}>
+                                        <tr style={{ paddingBottom: "30px", borderBottom: "5px solid #222" }}>
                                             <td width="300px" style={{ verticalAlign: "top" }}><span className="overlay">FINISHING KOLAM</span></td>
                                             <td width="300px" style={{ verticalAlign: "top" }}>
                                                 <SelectField
-                                                    value={this.state.finishing_kolam}
-                                                    onChange={(e, i, v) => this.setState({ finishing_kolam: v })}>
+                                                    errorText={this.state.error_fields.finishing_kolam}
+                                                    value={this.state.form_data.finishing_kolam}
+                                                    onChange={this.changeSelect("finishing_kolam")}>
                                                     <MenuItem value="12 - Kolam Renang Plester" primaryText="12 - Kolam Renang Plester" />
                                                     <MenuItem value="13 - Kolam Renang Pelapis" primaryText="13 - Kolam Renang Pelapis" />
                                                 </SelectField>
                                             </td>
                                             <td style={{ width: "600px" }}>
                                                 <span className="overlay">LUAS PERKERASAN HALAMAN</span><br />
-                                                <TextField placeholder="Ringan (m2)" style={{ width: "41%" }} />
-                                                <TextField placeholder="Berat (m2)" style={{ width: "41%" }} />
-                                                <TextField placeholder="Sedang (m2)" style={{ width: "41%" }} />
-                                                <TextField placeholder="Dg Penutup Lantai (m2)" style={{ width: "41%" }} />
+                                                <TextField errorText={this.state.error_fields.luas_perkerasan_halaman_ringan} name="luas_perkerasan_halaman_ringan" type="number" onChange={this.onChangeText} placeholder="Ringan (m2)" style={{ width: "41%" }} />
+                                                <TextField errorText={this.state.error_fields.luas_perkerasan_halaman_berat} name="luas_perkerasan_halaman_berat" type="number" onChange={this.onChangeText} placeholder="Berat (m2)" style={{ width: "41%" }} />
+                                                <TextField errorText={this.state.error_fields.luas_perkerasan_halaman_sedang} name="luas_perkerasan_halaman_sedang" type="number" onChange={this.onChangeText} placeholder="Sedang (m2)" style={{ width: "41%" }} />
+                                                <TextField errorText={this.state.error_fields.luas_perkerasan_halaman_dg_penutup_lantai} name="luas_perkerasan_halaman_dg_penutup_lantai" type="number" onChange={this.onChangeText} placeholder="Dg Penutup Lantai (m2)" style={{ width: "41%" }} />
                                             </td>
                                         </tr>
-                                        <tr style={{paddingTop: "30px"}}>
+                                        <tr style={{ paddingTop: "30px" }}>
                                             <td style={{ width: "700px" }}>
                                                 <span className="overlay">JUMLAH LAPANGAN TEKNIS</span><br />
-                                                <TextField placeholder="Beton (+lampu)" style={{ width: "31%" }} />
-                                                <TextField placeholder="Aspal (+lampu)" style={{ width: "31%" }} />
-                                                <TextField placeholder="Tanah Liat/Rumput (+lampu)" style={{ width: "31%" }} />
-                                                <TextField placeholder="Beton (-lampu)" style={{ width: "31%" }} />
-                                                <TextField placeholder="Aspal (-lampu)" style={{ width: "31%" }} />
-                                                <TextField placeholder="Tanah Liat/Rumput (-lampu)" style={{ width: "31%" }} />
+                                                <TextField errorText={this.state.error_fields.jumlah_lapangan_teknis_beton_with_lampu} name="jumlah_lapangan_teknis_beton_with_lampu" type="number" onChange={this.onChangeText} placeholder="Beton (+lampu)" style={{ width: "31%" }} />
+                                                <TextField errorText={this.state.error_fields.jumlah_lapangan_teknis_aspal_with_lampu} name="jumlah_lapangan_teknis_aspal_with_lampu" type="number" onChange={this.onChangeText} placeholder="Aspal (+lampu)" style={{ width: "31%" }} />
+                                                <TextField errorText={this.state.error_fields.jumlah_lapangan_teknis_tanah_liat_with_lampu} name="jumlah_lapangan_teknis_tanah_liat_with_lampu" type="number" onChange={this.onChangeText} placeholder="Tanah Liat/Rumput (+lampu)" style={{ width: "31%" }} />
+                                                <TextField errorText={this.state.error_fields.jumlah_lapangan_teknis_beton_no_lampu} name="jumlah_lapangan_teknis_beton_no_lampu" type="number" onChange={this.onChangeText} placeholder="Beton (-lampu)" style={{ width: "31%" }} />
+                                                <TextField errorText={this.state.error_fields.jumlah_lapangan_teknis_aspal_no_lampu} name="jumlah_lapangan_teknis_aspal_no_lampu" type="number" onChange={this.onChangeText} placeholder="Aspal (-lampu)" style={{ width: "31%" }} />
+                                                <TextField errorText={this.state.error_fields.jumlah_lapangan_teknis_tanah_liat_no_lampu} name="jumlah_lapangan_teknis_tanah_liat_no_lampu" type="number" onChange={this.onChangeText} placeholder="Tanah Liat/Rumput (-lampu)" style={{ width: "31%" }} />
                                             </td>
                                             <td style={{ width: "600px", verticalAlign: "top" }}>
                                                 <span className="overlay">JUMLAH LIFT</span><br />
-                                                <TextField placeholder="Penumpang" style={{ width: "31%" }} />
-                                                <TextField placeholder="Kapsul" style={{ width: "31%" }} />
-                                                <TextField placeholder="Barang" style={{ width: "31%" }} />
+                                                <TextField errorText={this.state.error_fields.jumlah_lift_penumpang} name="jumlah_lift_penumpang" type="number" onChange={this.onChangeText} placeholder="Penumpang" style={{ width: "31%" }} />
+                                                <TextField errorText={this.state.error_fields.jumlah_lift_kapsul} name="jumlah_lift_kapsul" type="number" onChange={this.onChangeText} placeholder="Kapsul" style={{ width: "31%" }} />
+                                                <TextField errorText={this.state.error_fields.jumlah_lift_barang} name="jumlah_lift_barang" type="number" onChange={this.onChangeText} placeholder="Barang" style={{ width: "31%" }} />
                                             </td>
                                         </tr>
                                         <tr>
                                             <td style={{ width: "250px" }}><span className="overlay">JUMLAH TANGGA BERJALAN</span></td>
                                             <td width="300px" className="nops">
-                                                <TextField placeholder="Lbr <= 0.80M" style={{ width: "41%" }} />
-                                                <TextField placeholder="Lbr > 0.80M" style={{ width: "41%" }} />
+                                                <TextField errorText={this.state.error_fields.jumlah_tangga_berjalan_k_080} name="jumlah_tangga_berjalan_k_080" onChange={this.onChangeText} placeholder="Lbr <= 0.80M" style={{ width: "41%" }} />
+                                                <TextField errorText={this.state.error_fields.jumlah_tangga_berjalan_l_080} name="jumlah_tangga_berjalan_l_080" onChange={this.onChangeText} placeholder="Lbr > 0.80M" style={{ width: "41%" }} />
                                             </td>
                                             <td width="200px"><span className="overlay">PANJANG PAGAR</span></td>
-                                            <td><TextField /></td>
+                                            <td><TextField errorText={this.state.error_fields.panjang_pagar} name="panjang_pagar" onChange={this.onChangeText} /></td>
                                         </tr>
                                         <tr>
                                             <td><span className="overlay">BAHAN PAGAR</span></td>
                                             <td width="300px">
                                                 <SelectField
-                                                    value={this.state.bahan_pagar}
-                                                    onChange={(e, i, v) => this.setState({ bahan_pagar: v })}>
+                                                    value={this.state.form_data.bahan_pagar}
+                                                    onChange={this.changeSelect("bahan_pagar")}>
                                                     <MenuItem value="35 - Pagar Besi" primaryText="35 - Pagar Besi" />
                                                     <MenuItem value="36 - Pagar Batako" primaryText="36 - Pagar Batako" />
                                                 </SelectField>
                                             </td>
                                             <td width="200px"><span className="overlay">JUMLAH PABX</span></td>
-                                            <td><TextField /></td>
+                                            <td><TextField errorText={this.state.error_fields.jumlah_pabx} name="jumlah_pabx" onChange={this.onChangeText} /></td>
                                         </tr>
                                         <tr style={{ paddingBottom: "30px" }}>
                                             <td style={{ verticalAlign: "top" }}><span className="overlay">PEMADAM KEBAKARAN</span></td>
                                             <td width="300px">
                                                 <Checkbox
+                                                    onCheck={this.onCheck("pemadam_kebakaran_hydrant")}
+                                                    checked={this.state.form_data.pemadam_kebakaran_hydrant}
                                                     label="Hydrant"
                                                 />
                                                 <Checkbox
+                                                    onCheck={this.onCheck("pemadam_kebakaran_sprinkler")}
+                                                    checked={this.state.form_data.pemadam_kebakaran_sprinkler}
                                                     label="Sprinkler"
                                                 />
                                                 <Checkbox
+                                                    onCheck={this.onCheck("pemadam_kebakaran_fire_alarm")}
+                                                    checked={this.state.form_data.pemadam_kebakaran_fire_alarm}
                                                     label="Fire Alarm"
                                                 />
                                             </td>
                                             <td width="300px"><span className="overlay">KEDALAMAN SUMUR ARTESIS</span></td>
-                                            <td><TextField placeholder="m" /></td>
+                                            <td><TextField errorText={this.state.error_fields.kedalaman_sumur_artesis} name="kedalaman_sumur_artesis" onChange={this.onChangeText} placeholder="m" /></td>
                                         </tr>
                                     </thead>
                                 </table>
@@ -337,6 +394,7 @@ export default class Lspop extends React.Component {
                     <div className="foot-container-wide">
                         <p><i className="material-icons">warning</i> Pastikan semua data yang anda masukkan sudah benar sebelum menekan tombol di bawah ini</p><br />
                         <RaisedButton
+                            onClick={this.onSubmit}
                             backgroundColor="#2ecc71"
                             labelColor="#fff"
                             label="SIMPAN"

@@ -71,6 +71,12 @@ a:hover {
     margin-bottom: 30px;
     background-color: #ecf0f1;
 }
+.card-super-wide {
+    max-width: 1600px;
+    margin: 0 auto;
+    background-color: #ecf0f1;
+    margin-top: 30px;
+}
 .heading-container {
     display: inline-block;
     border-bottom: 1px solid #bbbbbb;
@@ -94,6 +100,12 @@ a:hover {
 }
 .body-container {
     padding: 20px;
+    display: inline-block;
+    width: 100%;
+}
+.pages-container {
+    padding: 0;
+    margin-top: -4px;
 }
 .form-section {
     background-color: #222;
@@ -130,4 +142,43 @@ span.overlay {
 }
 .form-body table {
     width: 100%;
+}
+.error {
+    color: #e74c3c;
+    font-weight: bolder;
+}
+.navigation {
+    padding: 0px !important;
+}
+.page {
+    border-left: 1px solid #aaa;
+    min-height: 500px !important;
+}
+.navigation h2 {
+    padding: 15px;
+}
+.active {
+    font-weight: bolder !important;
+    color: #2980b9 !important;
+}
+.overlay.black {
+    background-color: #222;
+    margin-bottom: 10px;
+}
+.page {
+    padding: 15px !important;
+}
+
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: rgba(255,255,255,.95);
+    z-index: 9999;
+}
+.loading-overlay h1 {
+    margin-top: 150px;
+    text-align: center;
 }
