@@ -7,7 +7,7 @@ const path = require("path");
 const app = express();
 const cors = require("cors");
 const session = require("express-session");
-const PORT = 3000;
+const PORT = 3001;
 app.use(bodyParser.urlencoded({
     extended: true
 }));

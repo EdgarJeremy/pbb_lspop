@@ -3,12 +3,53 @@
  */
 const router = require("express").Router();
 const response = require("../utils/response");
+const multer = require("multer");
+const crypto = require("crypto");
+const path = require("path");
+
+const UPLOAD_DIR = "./assets/uploads";
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, UPLOAD_DIR);
+    },
+    filename: (req, file, cb) => {
+        crypto.pseudoRandomBytes(16, function (err, raw) {
+            if (err) return cb(err)
+            console.log(err);
+            cb(null, raw.toString('hex') + path.extname(file.originalname))
+        });
+    }
+})
+const upload = multer({ 
+    storage: storage,
+    fileFilter: (req,file,cb) => {
+        let filetypes = /jpeg|jpg|png|pdf/;
+        let mimetype = filetypes.test(file.mimetype);
+        let extname = filetypes.test(path.extname(file.originalname).toLocaleLowerCase());
+        if(mimetype && extname) {
+            return cb(null,true);
+        }
+        cb(`Error: supported files : ${filetypes}`);
+    }
+});
 
 /**
  * Models
  */
 const pengguna = require("../models/pengguna");
 const form = require("../models/form");
+
+/**
+ * File upload fields
+ */
+const spop_files = [
+    { name: "file_ktp", maxCount: 1 },
+    { name: "file_bukti_kepemilikan", maxCount: 1 },
+    { name: "file_surat_keterangan_kelurahan", maxCount: 1 },
+    { name: "file_izin_mendirikan_bangunan", maxCount: 1 }
+];
+
 
 router.post("/login", function (req, res) {
     let session = req.session;
@@ -50,21 +91,54 @@ router.get("/logout", function (req, res) {
     });
 });
 
-router.post("/simpan_spop", function (req, res) {
+router.post("/simpan_spop", upload.fields(spop_files), function (req, res) {
     let session = req.session;
     let body = req.body;
-    form.list_fields((err, fields) => {
+    let files = req.files;
+
+    form.list_fields_spop((err, fields) => {
         if (err) return res.json({ status: false, message: err });
 
         fields.splice(fields.indexOf("id_spop"), 1);
         fields.splice(fields.indexOf("approved"), 1);
         fields.splice(fields.indexOf("kode_znt"), 1);
+        fields.splice(fields.indexOf("file_izin_mendirikan_bangunan"),1);
+
+
+        for (let prop in files) {
+            if (prop) {
+                body[prop] = files[prop][0].filename;
+            }
+        }
+
+        console.log("Body",body);
 
         response.setRequiredPost(fields, body, (errorFields) => {
             if (errorFields.length) return res.json({ status: "ERRORFIELDS", fields: errorFields });
-            body = response.filterMethodField(body,fields);
-            console.log(body);
+            body = response.filterMethodField(body, fields);
             form.simpan_spop(body, (err, data) => {
+                res.json({
+                    status: (err) ? false : true,
+                    message: err,
+                    data: data
+                });
+            });
+        });
+    });
+});
+
+router.post("/simpan_lspop", function (req, res) {
+    let session = req.session;
+    let body = req.body;
+    form.list_fields_lspop((err, fields) => {
+        if (err) return res.json({ status: false, message: err });
+        fields.splice(fields.indexOf("id_lspop"), 1);
+        fields.splice(fields.indexOf("jenis_pagar"), 1);
+        fields.splice(fields.indexOf(""));
+        response.setRequiredPost(fields, body, (errorFields) => {
+            if (errorFields.length) return res.json({ status: "ERRORFIELDS", fields: errorFields });
+            body = response.filterMethodField(body, fields);
+            form.simpan_lspop(body, (err, data) => {
                 res.json({
                     status: (err) ? false : true,
                     message: err,

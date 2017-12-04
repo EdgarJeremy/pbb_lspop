@@ -3,16 +3,20 @@
  */
 import React from "react";
 import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
-import { Card } from "material-ui/Card";
+import { Card, CardActions, CardHeader, CardMedia } from "material-ui/Card";
 import SelectField from "material-ui/SelectField";
 import MenuItem from "material-ui/MenuItem";
 import TextField from "material-ui/TextField";
 import IconButton from "material-ui/IconButton";
 import RaisedButton from "material-ui/RaisedButton";
 import { Link } from "react-router-dom";
+import FlatButton from 'material-ui/FlatButton';
+
 
 import LoadingOverlay from "../components/LoadingOverlay";
 import AlertPopup from "../components/AlertPopup";
+import Alert from "../components/Alert";
+
 
 /**
  * Services
@@ -48,14 +52,22 @@ export default class Spop extends React.Component {
         rw_op: "",
         luas_tanah: "",
         jumlah_bangunan: "",
-        jenis_tanah: ""
+        jenis_tanah: "",
+        file_ktp: null,
+        file_bukti_kepemilikan: null,
+        file_surat_keterangan_kelurahan: null,
+        file_izin_mendirikan_bangunan: null
     };
 
     state = {
         form_data: { ...this.model },
         error_fields: {},
         loadingOverlay: false,
-        successPopup: false
+        successPopup: false,
+        display_file_ktp: "",
+        display_file_bukti_kepemilikan: "",
+        display_file_surat_keterangan_kelurahan: "",
+        display_file_izin_mendirikan_bangunan: ""
     }
 
     constructor(props) {
@@ -64,6 +76,7 @@ export default class Spop extends React.Component {
         this.onChangeText = this.onChangeText.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
         this.clearError = this.clearError.bind(this);
+        this.changeFile = this.changeFile.bind(this);
     }
 
     onChangeText(e, v) {
@@ -90,7 +103,6 @@ export default class Spop extends React.Component {
     }
 
     onSubmit() {
-        this.setState({ loadingOverlay: true });
         const { form_data } = this.state;
         const spop_data = {
             ...form_data,
@@ -98,7 +110,13 @@ export default class Spop extends React.Component {
             nop_bersama: form_data.nop_bersama.join(""),
             nop_asal: form_data.nop_asal.join("")
         };
+
+        this.Alert.setTitle("Loading..")
+            .setMessage("Mengupload data...")
+            .open();
+
         Api.kirim_data_spop(spop_data).then((response) => {
+
             if (response.status === "ERRORFIELDS") {
                 const { error_fields } = this.state;
                 for (let i = 0; i < response.fields.length; i++) {
@@ -108,20 +126,30 @@ export default class Spop extends React.Component {
                         error_fields[response.fields[i]] = `Harus diisi`;
                     }
                 }
+                this.Alert.close();
                 this.setState({ error_fields });
             } else if (response.status) {
+                this.Alert.setTitle("Penginputan berhasil!")
+                    .setMessage("Data yang anda isi sudah berhasil terinput di database kami")
+                    .open();
                 this.setState({
-                    successPopup: true, form_data: {
-                        ...this.model, nop: ["", "", "", "", "", "", ""],
+                    form_data: {
+                        ...this.model,
+                        nop: ["", "", "", "", "", "", ""],
                         nop_bersama: ["", "", "", "", "", "", ""],
                         nop_asal: ["", "", "", "", "", "", ""],
-                    }
+                    },
+                    error_fields: {},
+                    display_file_ktp: "",
+                    display_file_bukti_kepemilikan: "",
+                    display_file_surat_keterangan_kelurahan: "",
+                    display_file_izin_mendirikan_bangunan: ""
                 });
+            } else {
+                this.Alert.setTitle("Fatal Error").setMessage(JSON.stringify(response.message)).open();
             }
-            this.setState({ loadingOverlay: false });
         }).catch(err => {
-            console.log(err);
-            this.setState({ loadingOverlay: false });
+            this.Alert.setTitle("Fatal Error").setMessage(JSON.stringify(err)).open();
         });
     }
 
@@ -135,6 +163,44 @@ export default class Spop extends React.Component {
         const { error_fields } = this.state;
         error_fields[name] = undefined;
         this.setState({ error_fields });
+    }
+
+    changeFile(e) {
+        if (e.target.files && e.target.files[0]) {
+            const allow = /jpeg|jpg|png|pdf/;
+            let inputName = e.target.name;
+            let file = e.target.files[0];
+
+            if (allow.test(file.type)) {
+                const { form_data } = this.state;
+                form_data[inputName] = file;
+                let reader = new FileReader();
+                reader.onload = (e) => {
+                    let newObj = {};
+                    newObj[`display_${inputName}`] = e.target.result;
+                    this.setState(newObj);
+                }
+                reader.readAsDataURL(file);
+            } else {
+                this.Alert.setTitle("Error")
+                    .setMessage(`Tipe file ${file.type} tidak didukung`)
+                    .open();
+            }
+
+        }
+    }
+
+    removeFile(name) {
+        const { form_data } = this.state;
+        form_data[name] = null;
+        let newObj = {};
+        newObj[`display_${name}`] = "";
+        this.setState({ form_data });
+        this.setState(newObj);
+    }
+
+    componentDidMount() {
+        this.Alert = this.refs.Alert;
     }
 
     render() {
@@ -199,37 +265,37 @@ export default class Spop extends React.Component {
                                             <tr>
                                                 <td><span className="overlay">NOP</span></td>
                                                 <td className="nops">
-                                                    <TextField onFocus={this.clearError} value={this.state.form_data.nop[0]} errorText={this.state.error_fields.nop} name="nop" style={{ width: 50 }} onChange={this.changeNop("nop", 0)} /> -
-                                                    <TextField onFocus={this.clearError} value={this.state.form_data.nop[1]} errorText={this.state.error_fields.nop} name="nop" style={{ width: 50 }} onChange={this.changeNop("nop", 1)} /> -
-                                                    <TextField onFocus={this.clearError} value={this.state.form_data.nop[2]} errorText={this.state.error_fields.nop} name="nop" style={{ width: 50 }} onChange={this.changeNop("nop", 2)} /> -
-                                                    <TextField onFocus={this.clearError} value={this.state.form_data.nop[3]} errorText={this.state.error_fields.nop} name="nop" style={{ width: 50 }} onChange={this.changeNop("nop", 3)} /> -
-                                                    <TextField onFocus={this.clearError} value={this.state.form_data.nop[4]} errorText={this.state.error_fields.nop} name="nop" style={{ width: 50 }} onChange={this.changeNop("nop", 4)} /> -
-                                                    <TextField onFocus={this.clearError} value={this.state.form_data.nop[5]} errorText={this.state.error_fields.nop} name="nop" style={{ width: 50 }} onChange={this.changeNop("nop", 5)} /> -
-                                                    <TextField onFocus={this.clearError} value={this.state.form_data.nop[6]} errorText={this.state.error_fields.nop} name="nop" style={{ width: 50 }} onChange={this.changeNop("nop", 6)} />
+                                                    <TextField type="number" onFocus={this.clearError} value={this.state.form_data.nop[0]} errorText={this.state.error_fields.nop} name="nop" style={{ width: 50 }} onChange={this.changeNop("nop", 0)} /> -
+                                                    <TextField type="number" onFocus={this.clearError} value={this.state.form_data.nop[1]} errorText={this.state.error_fields.nop} name="nop" style={{ width: 50 }} onChange={this.changeNop("nop", 1)} /> -
+                                                    <TextField type="number" onFocus={this.clearError} value={this.state.form_data.nop[2]} errorText={this.state.error_fields.nop} name="nop" style={{ width: 50 }} onChange={this.changeNop("nop", 2)} /> -
+                                                    <TextField type="number" onFocus={this.clearError} value={this.state.form_data.nop[3]} errorText={this.state.error_fields.nop} name="nop" style={{ width: 50 }} onChange={this.changeNop("nop", 3)} /> -
+                                                    <TextField type="number" onFocus={this.clearError} value={this.state.form_data.nop[4]} errorText={this.state.error_fields.nop} name="nop" style={{ width: 50 }} onChange={this.changeNop("nop", 4)} /> -
+                                                    <TextField type="number" onFocus={this.clearError} value={this.state.form_data.nop[5]} errorText={this.state.error_fields.nop} name="nop" style={{ width: 50 }} onChange={this.changeNop("nop", 5)} /> -
+                                                    <TextField type="number" onFocus={this.clearError} value={this.state.form_data.nop[6]} errorText={this.state.error_fields.nop} name="nop" style={{ width: 50 }} onChange={this.changeNop("nop", 6)} />
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td><span className="overlay">NOP BERSAMA</span></td>
                                                 <td className="nops">
-                                                    <TextField onFocus={this.clearError} value={this.state.form_data.nop_bersama[0]} errorText={this.state.error_fields.nop_bersama} name="nop_bersama" style={{ width: 50 }} onChange={this.changeNop("nop_bersama", 0)} /> -
-                                                    <TextField onFocus={this.clearError} value={this.state.form_data.nop_bersama[1]} errorText={this.state.error_fields.nop_bersama} name="nop_bersama" style={{ width: 50 }} onChange={this.changeNop("nop_bersama", 1)} /> -
-                                                    <TextField onFocus={this.clearError} value={this.state.form_data.nop_bersama[2]} errorText={this.state.error_fields.nop_bersama} name="nop_bersama" style={{ width: 50 }} onChange={this.changeNop("nop_bersama", 2)} /> -
-                                                    <TextField onFocus={this.clearError} value={this.state.form_data.nop_bersama[3]} errorText={this.state.error_fields.nop_bersama} name="nop_bersama" style={{ width: 50 }} onChange={this.changeNop("nop_bersama", 3)} /> -
-                                                    <TextField onFocus={this.clearError} value={this.state.form_data.nop_bersama[4]} errorText={this.state.error_fields.nop_bersama} name="nop_bersama" style={{ width: 50 }} onChange={this.changeNop("nop_bersama", 4)} /> -
-                                                    <TextField onFocus={this.clearError} value={this.state.form_data.nop_bersama[5]} errorText={this.state.error_fields.nop_bersama} name="nop_bersama" style={{ width: 50 }} onChange={this.changeNop("nop_bersama", 5)} /> -
-                                                    <TextField onFocus={this.clearError} value={this.state.form_data.nop_bersama[6]} errorText={this.state.error_fields.nop_bersama} name="nop_bersama" style={{ width: 50 }} onChange={this.changeNop("nop_bersama", 6)} />
+                                                    <TextField type="number" onFocus={this.clearError} value={this.state.form_data.nop_bersama[0]} errorText={this.state.error_fields.nop_bersama} name="nop_bersama" style={{ width: 50 }} onChange={this.changeNop("nop_bersama", 0)} /> -
+                                                    <TextField type="number" onFocus={this.clearError} value={this.state.form_data.nop_bersama[1]} errorText={this.state.error_fields.nop_bersama} name="nop_bersama" style={{ width: 50 }} onChange={this.changeNop("nop_bersama", 1)} /> -
+                                                    <TextField type="number" onFocus={this.clearError} value={this.state.form_data.nop_bersama[2]} errorText={this.state.error_fields.nop_bersama} name="nop_bersama" style={{ width: 50 }} onChange={this.changeNop("nop_bersama", 2)} /> -
+                                                    <TextField type="number" onFocus={this.clearError} value={this.state.form_data.nop_bersama[3]} errorText={this.state.error_fields.nop_bersama} name="nop_bersama" style={{ width: 50 }} onChange={this.changeNop("nop_bersama", 3)} /> -
+                                                    <TextField type="number" onFocus={this.clearError} value={this.state.form_data.nop_bersama[4]} errorText={this.state.error_fields.nop_bersama} name="nop_bersama" style={{ width: 50 }} onChange={this.changeNop("nop_bersama", 4)} /> -
+                                                    <TextField type="number" onFocus={this.clearError} value={this.state.form_data.nop_bersama[5]} errorText={this.state.error_fields.nop_bersama} name="nop_bersama" style={{ width: 50 }} onChange={this.changeNop("nop_bersama", 5)} /> -
+                                                    <TextField type="number" onFocus={this.clearError} value={this.state.form_data.nop_bersama[6]} errorText={this.state.error_fields.nop_bersama} name="nop_bersama" style={{ width: 50 }} onChange={this.changeNop("nop_bersama", 6)} />
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td><span className="overlay">NOP ASAL</span></td>
                                                 <td className="nops">
-                                                    <TextField onFocus={this.clearError} value={this.state.form_data.nop_asal[0]} errorText={this.state.error_fields.nop_asal} name="nop_asal" style={{ width: 50 }} onChange={this.changeNop("nop_asal", 0)} /> -
-                                                    <TextField onFocus={this.clearError} value={this.state.form_data.nop_asal[1]} errorText={this.state.error_fields.nop_asal} name="nop_asal" style={{ width: 50 }} onChange={this.changeNop("nop_asal", 1)} /> -
-                                                    <TextField onFocus={this.clearError} value={this.state.form_data.nop_asal[2]} errorText={this.state.error_fields.nop_asal} name="nop_asal" style={{ width: 50 }} onChange={this.changeNop("nop_asal", 2)} /> -
-                                                    <TextField onFocus={this.clearError} value={this.state.form_data.nop_asal[3]} errorText={this.state.error_fields.nop_asal} name="nop_asal" style={{ width: 50 }} onChange={this.changeNop("nop_asal", 3)} /> -
-                                                    <TextField onFocus={this.clearError} value={this.state.form_data.nop_asal[4]} errorText={this.state.error_fields.nop_asal} name="nop_asal" style={{ width: 50 }} onChange={this.changeNop("nop_asal", 4)} /> -
-                                                    <TextField onFocus={this.clearError} value={this.state.form_data.nop_asal[5]} errorText={this.state.error_fields.nop_asal} name="nop_asal" style={{ width: 50 }} onChange={this.changeNop("nop_asal", 5)} /> -
-                                                    <TextField onFocus={this.clearError} value={this.state.form_data.nop_asal[6]} errorText={this.state.error_fields.nop_asal} name="nop_asal" style={{ width: 50 }} onChange={this.changeNop("nop_asal", 6)} />
+                                                    <TextField type="number" onFocus={this.clearError} value={this.state.form_data.nop_asal[0]} errorText={this.state.error_fields.nop_asal} name="nop_asal" style={{ width: 50 }} onChange={this.changeNop("nop_asal", 0)} /> -
+                                                    <TextField type="number" onFocus={this.clearError} value={this.state.form_data.nop_asal[1]} errorText={this.state.error_fields.nop_asal} name="nop_asal" style={{ width: 50 }} onChange={this.changeNop("nop_asal", 1)} /> -
+                                                    <TextField type="number" onFocus={this.clearError} value={this.state.form_data.nop_asal[2]} errorText={this.state.error_fields.nop_asal} name="nop_asal" style={{ width: 50 }} onChange={this.changeNop("nop_asal", 2)} /> -
+                                                    <TextField type="number" onFocus={this.clearError} value={this.state.form_data.nop_asal[3]} errorText={this.state.error_fields.nop_asal} name="nop_asal" style={{ width: 50 }} onChange={this.changeNop("nop_asal", 3)} /> -
+                                                    <TextField type="number" onFocus={this.clearError} value={this.state.form_data.nop_asal[4]} errorText={this.state.error_fields.nop_asal} name="nop_asal" style={{ width: 50 }} onChange={this.changeNop("nop_asal", 4)} /> -
+                                                    <TextField type="number" onFocus={this.clearError} value={this.state.form_data.nop_asal[5]} errorText={this.state.error_fields.nop_asal} name="nop_asal" style={{ width: 50 }} onChange={this.changeNop("nop_asal", 5)} /> -
+                                                    <TextField type="number" onFocus={this.clearError} value={this.state.form_data.nop_asal[6]} errorText={this.state.error_fields.nop_asal} name="nop_asal" style={{ width: 50 }} onChange={this.changeNop("nop_asal", 6)} />
                                                 </td>
                                             </tr>
                                         </thead>
@@ -411,6 +477,184 @@ export default class Spop extends React.Component {
                                 </div>
                             </Card>
                         </div>
+                        {/* File Pendukung */}
+                        <div className="body-container">
+                            <Card>
+                                <div className="form-section">
+                                    <h2>File Pendukung</h2>
+                                </div>
+                                <div className="form-body">
+                                    <div className="button-group">
+                                        <RaisedButton
+                                            primary={(this.state.form_data.file_ktp !== null)}
+                                            icon={<i style={{ color: ((this.state.form_data.file_ktp !== null) ? "#fff" : "#000") }} className="material-icons">cloud_upload</i>}
+                                            label="Upload KTP"
+                                            labelPosition="before"
+                                            containerElement="label">
+                                            <input
+                                                accept="image/*,application/pdf"
+                                                onChange={this.changeFile}
+                                                type="file" name="file_ktp" style={{
+                                                    cursor: 'pointer',
+                                                    position: 'absolute',
+                                                    top: 0,
+                                                    bottom: 0,
+                                                    right: 0,
+                                                    left: 0,
+                                                    width: "100%",
+                                                    opacity: 0,
+                                                }} />
+                                        </RaisedButton>
+                                        <RaisedButton
+                                            primary={(this.state.form_data.file_bukti_kepemilikan !== null)}
+                                            icon={<i style={{ color: ((this.state.form_data.file_bukti_kepemilikan !== null) ? "#fff" : "#000") }} className="material-icons">cloud_upload</i>}
+                                            label="Upload Bukti Kepemilikan"
+                                            labelPosition="before"
+                                            containerElement="label">
+                                            <input
+                                                accept="image/*,application/pdf"
+                                                onChange={this.changeFile}
+                                                type="file" name="file_bukti_kepemilikan" style={{
+                                                    cursor: 'pointer',
+                                                    position: 'absolute',
+                                                    top: 0,
+                                                    bottom: 0,
+                                                    right: 0,
+                                                    left: 0,
+                                                    width: "100%",
+                                                    opacity: 0,
+                                                }} />
+                                        </RaisedButton>
+                                        <RaisedButton
+                                            primary={(this.state.form_data.file_surat_keterangan_kelurahan !== null)}
+                                            icon={<i style={{ color: ((this.state.form_data.file_surat_keterangan_kelurahan !== null) ? "#fff" : "#000") }} className="material-icons">cloud_upload</i>}
+                                            label="Upload Surat Keterangan Kelurahan"
+                                            labelPosition="before"
+                                            containerElement="label">
+                                            <input
+                                                accept="image/*,application/pdf"
+                                                onChange={this.changeFile}
+                                                type="file" name="file_surat_keterangan_kelurahan" style={{
+                                                    cursor: 'pointer',
+                                                    position: 'absolute',
+                                                    top: 0,
+                                                    bottom: 0,
+                                                    right: 0,
+                                                    left: 0,
+                                                    width: "100%",
+                                                    opacity: 0,
+                                                }} />
+                                        </RaisedButton>
+                                        <RaisedButton
+                                            primary={(this.state.form_data.file_izin_mendirikan_bangunan !== null)}
+                                            icon={<i style={{ color: ((this.state.form_data.file_izin_mendirikan_bangunan !== null) ? "#fff" : "#000") }} className="material-icons">cloud_upload</i>}
+                                            label="Upload Izin Mendirikan Bangunan"
+                                            labelPosition="before"
+                                            containerElement="label">
+                                            <input
+                                                accept="image/*,application/pdf"
+                                                onChange={this.changeFile}
+                                                type="file" name="file_izin_mendirikan_bangunan" style={{
+                                                    cursor: 'pointer',
+                                                    position: 'absolute',
+                                                    top: 0,
+                                                    bottom: 0,
+                                                    right: 0,
+                                                    left: 0,
+                                                    width: "100%",
+                                                    opacity: 0,
+                                                }} />
+                                        </RaisedButton>
+                                    </div>
+                                    <div className="file-group">
+                                        {
+                                            (!this.state.display_file_ktp &&
+                                                !this.state.form_data.file_ktp) ||
+                                            <div className="file-box">
+                                                <Card style={{ width: "300px" }}>
+                                                    <CardHeader style={{ paddingRight: 0 }} title="KTP" />
+                                                    <CardMedia>
+                                                        {
+                                                            (this.state.display_file_ktp.split(";")[0].split(":")[1].split("/")[0] === "image") ?
+                                                                <img src={this.state.display_file_ktp} alt="" /> :
+                                                                <iframe title="KTP" src={this.state.display_file_ktp} />
+                                                        }
+                                                    </CardMedia>
+                                                    <CardActions>
+                                                        <FlatButton onClick={() => this.removeFile("file_ktp")} label="Hapus" />
+                                                    </CardActions>
+                                                </Card>
+                                            </div>
+                                        }
+                                        {
+                                            (!this.state.display_file_bukti_kepemilikan &&
+                                                !this.state.form_data.file_bukti_kepemilikan) ||
+                                            <div className="file-box">
+                                                <Card style={{ width: "300px" }}>
+                                                    <CardHeader title="Bukti Kepemilikan" />
+                                                    <CardMedia>
+                                                        {
+                                                            (this.state.display_file_bukti_kepemilikan.split(";")[0].split(":")[1].split("/")[0] === "image") ?
+                                                                <img src={this.state.display_file_bukti_kepemilikan} alt="" /> :
+                                                                <iframe title="Bukti Kepemilikan" src={this.state.display_file_bukti_kepemilikan} />
+                                                        }
+                                                    </CardMedia>
+                                                    <CardActions>
+                                                        <FlatButton onClick={() => this.removeFile("file_bukti_kepemilikan")} label="Hapus" />
+                                                    </CardActions>
+                                                </Card>
+                                            </div>
+                                        }
+                                        {
+                                            (!this.state.display_file_surat_keterangan_kelurahan &&
+                                                !this.state.form_data.file_surat_keterangan_kelurahan) ||
+                                            <div className="file-box">
+                                                <Card style={{ width: "300px" }}>
+                                                    <CardHeader title="Surat Keterangan Kelurahan" />
+                                                    <CardMedia>
+                                                        {
+                                                            (this.state.display_file_surat_keterangan_kelurahan.split(";")[0].split(":")[1].split("/")[0] === "image") ?
+                                                                <img src={this.state.display_file_surat_keterangan_kelurahan} alt="" /> :
+                                                                <iframe title="Surat Keterangan Kelurahan" src={this.state.display_file_surat_keterangan_kelurahan} />
+                                                        }
+                                                    </CardMedia>
+                                                    <CardActions>
+                                                        <FlatButton onClick={() => this.removeFile("file_surat_keterangan_kelurahan")} label="Hapus" />
+                                                    </CardActions>
+                                                </Card>
+                                            </div>
+                                        }
+                                        {
+                                            (!this.state.display_file_izin_mendirikan_bangunan &&
+                                                !this.state.form_data.file_izin_mendirikan_bangunan) ||
+                                            <div className="file-box">
+                                                <Card style={{ width: "300px" }}>
+                                                    <CardHeader title="Izin Mendirikan Bangunan" />
+                                                    <CardMedia>
+                                                        {
+                                                            (this.state.display_file_izin_mendirikan_bangunan.split(";")[0].split(":")[1].split("/")[0] === "image") ?
+                                                                <img src={this.state.display_file_izin_mendirikan_bangunan} alt="" /> :
+                                                                <iframe title="Izin Mendirikan Bangunan" src={this.state.display_file_izin_mendirikan_bangunan} />
+                                                        }
+                                                    </CardMedia>
+                                                    <CardActions>
+                                                        <FlatButton onClick={() => this.removeFile("file_izin_mendirikan_bangunan")} label="Hapus" />
+                                                    </CardActions>
+                                                </Card>
+                                            </div>
+                                        }
+                                    </div>
+                                    {
+                                        (this.state.error_fields.file_ktp ||
+                                            this.state.error_fields.file_bukti_kepemilikan ||
+                                            this.state.error_fields.file_surat_keterangan_kelurahan
+                                        ) &&
+                                        <p className="error">Lengkapi file-file pendukung</p>
+                                    }
+
+                                </div>
+                            </Card>
+                        </div>
                         <div className="foot-container-wide">
                             <p><i className="material-icons">warning</i> Pastikan semua data yang anda masukkan sudah benar sebelum menekan tombol di bawah ini</p><br />
                             <RaisedButton
@@ -422,7 +666,8 @@ export default class Spop extends React.Component {
                         </div>
                     </Card>
                     <LoadingOverlay visible={this.state.loadingOverlay} loadingColor="#3498db" title="Mengupload data.." />
-                    <AlertPopup open={this.state.successPopup} onClose={() => this.setState({ successPopup: false })} title="Konfirmasi berhasil" content="Data berhasil disimpan di database" />
+                    {/* <AlertPopup open={this.state.successPopup} onClose={() => this.setState({ successPopup: false })} title="Konfirmasi berhasil" content="Data berhasil disimpan di database" /> */}
+                    <Alert ref="Alert" />
                 </div>
             </MuiThemeProvider>
         );
