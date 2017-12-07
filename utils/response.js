@@ -2,7 +2,7 @@
  * Response Utils
  */
 
-const response = {
+const Response = {
     setRequiredPost: (fields,body,cb) => {
         let errorFields = [];
         for(let i=0;i<fields.length;i++) {
@@ -24,4 +24,4 @@ const response = {
     }
 }
 
-module.exports = response;
+module.exports = Response;

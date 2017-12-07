@@ -32,6 +32,9 @@ export default class Login extends React.Component {
         this.onChangeText = this.onChangeText.bind(this);
         this.onLogin = this.onLogin.bind(this);
         this.clearError = this.clearError.bind(this);
+    }
+
+    componentWillMount() {
         this.cekLogin();
     }
 
@@ -70,13 +73,12 @@ export default class Login extends React.Component {
             } else if(response.status === false) {
                 this.setState({error: "Username atau password anda salah"});
             } else {
-                this.props.history.push("/admin");
+                this.props.history.push("/admin/home");
             }
         }).catch(err => console.log(err));
     }
 
     componentWillUnmount() {
-        console.log("Unmount!");
         if(this.timeout) {
             clearTimeout(this.timeout);
         }
@@ -134,7 +136,7 @@ export default class Login extends React.Component {
                     </MuiThemeProvider>
                 );
             } else {
-                return (<Redirect to="/admin" />);
+                return (<Redirect to="/admin/home" />);
             }
         } else {
             return(

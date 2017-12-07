@@ -72,10 +72,12 @@ a:hover {
     background-color: #ecf0f1;
 }
 .card-super-wide {
-    max-width: 1600px;
-    margin: 0 auto;
+    top: 0;
+    right: 0px;
+    bottom: 0;
+    left: 0px;
     background-color: #ecf0f1;
-    margin-top: 30px;
+    position: fixed;
 }
 .heading-container {
     display: inline-block;
@@ -106,6 +108,8 @@ a:hover {
 .pages-container {
     padding: 0;
     margin-top: -4px;
+    position: relative;
+    height: 100vh;
 }
 .form-section {
     background-color: #222;
@@ -147,12 +151,24 @@ span.overlay {
     color: #e74c3c;
     font-weight: bolder;
 }
+.error i {
+    line-height: 50px;
+}
 .navigation {
     padding: 0px !important;
+    position: absolute !important;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 20%;
 }
 .page {
     border-left: 1px solid #aaa;
-    min-height: 500px !important;
+    position: absolute !important;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 80%;
 }
 .navigation h2 {
     padding: 15px;
@@ -202,4 +218,51 @@ span.overlay {
 .file-box {
     float: left;
     margin-right: 10px;
+}
+.content-title {
+    margin-bottom: 22px;
+}
+.content-table-header {
+    background-color: #222 !important;
+    color: #fff !important;
+}
+
+.pagination {
+    margin: 40px 0 40px 0;
+    padding: 0;
+    list-style: none;
+    display: inline-block;
+}
+.pagination li {
+    display: inline-block;
+}
+.pagination li a {
+    padding: 10px 20px;
+    background-color: #fff;
+    text-decoration: none;
+    color: black;
+    cursor: pointer;
+    outline: 0;
+}
+.pagination li.active a {
+    background-color: #222;
+    color: #fff;
+}
+.pagination li.previous a, .pagination li.next a {
+    padding: 10px 30px 10px 30px !important;
+}
+
+.pagination li.disabled a {
+    color: #bbb;
+}
+
+.content-head {
+    display: inline-block;
+    width: 100%;
+}
+.left {
+    float: left;
+}
+.right {
+    float: right;
 }

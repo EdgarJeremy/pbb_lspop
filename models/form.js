@@ -4,6 +4,11 @@
 const Query = require("../config/database");
 
 /**
+ * Utis
+ */
+const _ = require("lodash");
+
+/**
  * Form model
  */
 
@@ -33,6 +38,40 @@ const form = {
             }
             cb(err, fields);
         });
+    },
+    ambil_spop: (limit, offset, where = {}, cb) => {
+        if (!_.isEmpty(where))
+            Query.where(where);
+
+        Query.limit(limit, offset)
+            .get("spop", cb);
+    },
+    ambil_total_spop: (where = {}, cb) => {
+        if (!_.isEmpty(where))
+            Query.where(where);
+
+        Query.count("spop", cb);
+    },
+    ambil_lspop: (limit, offset, where = {}, cb) => {
+        if (!_.isEmpty(where))
+            Query.where(where);
+
+        Query.limit(limit, offset)
+            .get("lspop", cb);
+    },
+    ambil_total_lspop: (where = {}, cb) => {
+        if (!_.isEmpty(where))
+            Query.where(where);
+            
+        Query.count("lspop", cb);
+    },
+    approve_spop: (id, cb) => {
+        Query.where({ id_spop: id })
+            .update("spop", { approved: true }, null, cb);
+    },
+    approve_lspop: (id, cb) => {
+        Query.where({ id_lspop: id })
+            .update("lspop", { approved: true }, null, cb);
     }
 }
 

@@ -12,9 +12,7 @@ import RaisedButton from "material-ui/RaisedButton";
 import { Link } from "react-router-dom";
 import FlatButton from 'material-ui/FlatButton';
 
-
 import LoadingOverlay from "../components/LoadingOverlay";
-import AlertPopup from "../components/AlertPopup";
 import Alert from "../components/Alert";
 
 
@@ -112,11 +110,16 @@ export default class Spop extends React.Component {
         };
 
         this.Alert.setTitle("Loading..")
+            .cancelable(false)
+            .withLoading(true)
             .setMessage("Mengupload data...")
             .open();
 
-        Api.kirim_data_spop(spop_data).then((response) => {
-
+        Api.kirim_data_spop(spop_data, (complete) => {
+            console.log(complete);
+            this.Alert.setProgress(complete);
+        }).then((response) => {
+            this.Alert.setProgress(0);
             if (response.status === "ERRORFIELDS") {
                 const { error_fields } = this.state;
                 for (let i = 0; i < response.fields.length; i++) {
@@ -129,7 +132,10 @@ export default class Spop extends React.Component {
                 this.Alert.close();
                 this.setState({ error_fields });
             } else if (response.status) {
-                this.Alert.setTitle("Penginputan berhasil!")
+                this.Alert
+                    .cancelable(true)
+                    .setTitle("Penginputan berhasil!")
+                    .withLoading(false)
                     .setMessage("Data yang anda isi sudah berhasil terinput di database kami")
                     .open();
                 this.setState({
@@ -146,10 +152,10 @@ export default class Spop extends React.Component {
                     display_file_izin_mendirikan_bangunan: ""
                 });
             } else {
-                this.Alert.setTitle("Fatal Error").setMessage(JSON.stringify(response.message)).open();
+                this.Alert.cancelable(true).withLoading(false).setTitle("Fatal Error").setMessage(JSON.stringify(response.message)).open();
             }
         }).catch(err => {
-            this.Alert.setTitle("Fatal Error").setMessage(JSON.stringify(err)).open();
+            this.Alert.cancelable(true).withLoading(false).setTitle("Fatal Error").setMessage(JSON.stringify(err)).open();
         });
     }
 
@@ -179,10 +185,16 @@ export default class Spop extends React.Component {
                     let newObj = {};
                     newObj[`display_${inputName}`] = e.target.result;
                     this.setState(newObj);
+                    const { error_fields } = this.state;
+                    error_fields.file_ktp = undefined;
+                    error_fields.file_bukti_kepemilikan = undefined;
+                    error_fields.file_surat_keterangan_kelurahan = undefined;
+                    error_fields.file_izin_mendirikan_bangunan = undefined;
+                    this.setState({ error_fields });
                 }
                 reader.readAsDataURL(file);
             } else {
-                this.Alert.setTitle("Error")
+                this.Alert.cancelable(true).withLoading(false).setTitle("Error")
                     .setMessage(`Tipe file ${file.type} tidak didukung`)
                     .open();
             }
@@ -656,7 +668,7 @@ export default class Spop extends React.Component {
                             </Card>
                         </div>
                         <div className="foot-container-wide">
-                            <p><i className="material-icons">warning</i> Pastikan semua data yang anda masukkan sudah benar sebelum menekan tombol di bawah ini</p><br />
+                            <p>Pastikan semua data yang anda masukkan sudah benar sebelum menekan tombol di bawah ini</p><br />
                             <RaisedButton
                                 onClick={this.onSubmit}
                                 backgroundColor="#2ecc71"
@@ -666,7 +678,6 @@ export default class Spop extends React.Component {
                         </div>
                     </Card>
                     <LoadingOverlay visible={this.state.loadingOverlay} loadingColor="#3498db" title="Mengupload data.." />
-                    {/* <AlertPopup open={this.state.successPopup} onClose={() => this.setState({ successPopup: false })} title="Konfirmasi berhasil" content="Data berhasil disimpan di database" /> */}
                     <Alert ref="Alert" />
                 </div>
             </MuiThemeProvider>

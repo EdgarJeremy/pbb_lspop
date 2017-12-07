@@ -1,4 +1,6 @@
-const base_url = `http://${window.location.hostname}:3001/api`;
+import config from "../config.js";
+
+const base_url = `${config.api_base_url}/api`;
 const axios = require("axios");
 const ax = axios.create({
     baseURL: base_url,
@@ -10,13 +12,18 @@ const ax = axios.create({
 
 const Api = {
 
-    kirim_data_spop: (data_spop) => {
+    kirim_data_spop: (data_spop, progress) => {
         let form_data = new FormData();
-        for(let prop in data_spop) {
-            form_data.append(prop,data_spop[prop]);
+        for (let prop in data_spop) {
+            form_data.append(prop, data_spop[prop]);
         }
-        return axios.post("http://localhost:3001/api/simpan_spop", form_data, { headers: { "Content-Type": "multipart/form-data" } })
-            .then((response) => response.data);
+        return ax.post("/simpan_spop", form_data, {
+            headers: { "Content-Type": "multipart/form-data" },
+            onUploadProgress: (e) => {
+                let complete = (e.loaded * 100) / e.total;
+                progress(complete);
+            }
+        }).then((response) => response.data);
     },
 
     kirim_data_lspop: (data_lspop) => {

@@ -2,7 +2,7 @@ import React from "react";
 import Dialog from "material-ui/Dialog";
 import FlatButton from "material-ui/FlatButton";
 
-const AlertPopup = ({title,content,onClose,open}) => (
+const AlertPopup = ({title,content,onClose,open,render,width}) => (
     <Dialog
         actions={[
             <FlatButton
@@ -13,10 +13,12 @@ const AlertPopup = ({title,content,onClose,open}) => (
         ]}
         modal={false}
         title={title}
-        contentStyle={{ width: "20%" }}
+        contentStyle={{ width: width }}
         open={open}
         onRequestClose={onClose}>
         {content}
+        <br /><br />
+        {render}
     </Dialog>
 );
 

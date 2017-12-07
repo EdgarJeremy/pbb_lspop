@@ -2,7 +2,8 @@
  * Api router
  */
 const router = require("express").Router();
-const response = require("../utils/response");
+const Response = require("../utils/response");
+const File = require("../utils/File");
 const multer = require("multer");
 const crypto = require("crypto");
 const path = require("path");
@@ -16,19 +17,18 @@ const storage = multer.diskStorage({
     filename: (req, file, cb) => {
         crypto.pseudoRandomBytes(16, function (err, raw) {
             if (err) return cb(err)
-            console.log(err);
             cb(null, raw.toString('hex') + path.extname(file.originalname))
         });
     }
 })
-const upload = multer({ 
+const upload = multer({
     storage: storage,
-    fileFilter: (req,file,cb) => {
+    fileFilter: (req, file, cb) => {
         let filetypes = /jpeg|jpg|png|pdf/;
         let mimetype = filetypes.test(file.mimetype);
         let extname = filetypes.test(path.extname(file.originalname).toLocaleLowerCase());
-        if(mimetype && extname) {
-            return cb(null,true);
+        if (mimetype && extname) {
+            return cb(null, true);
         }
         cb(`Error: supported files : ${filetypes}`);
     }
@@ -50,16 +50,15 @@ const spop_files = [
     { name: "file_izin_mendirikan_bangunan", maxCount: 1 }
 ];
 
-
 router.post("/login", function (req, res) {
     let session = req.session;
     let body = req.body;
 
-    response.setRequiredPost(["username", "password"], body, (errorFields) => {
+    Response.setRequiredPost(["username", "password"], body, (errorFields) => {
         if (errorFields.length) return res.json({ status: "ERRORFIELDS", fields: errorFields });
 
         pengguna.login(body.username, body.password, function (err, data) {
-            if (err) res.json(err);
+            if (err) return res.json(err);
             session.userdata = data;
             res.json({
                 status: (data.id_pengguna) ? true : false,
@@ -84,10 +83,10 @@ router.get("/logout", function (req, res) {
     let session = req.session;
     session.destroy((err) => {
         console.log(err);
-    });
-    res.json({
-        message: "From logout",
-        session: session
+        res.json({
+            message: "From logout",
+            session: session
+        });
     });
 });
 
@@ -96,13 +95,15 @@ router.post("/simpan_spop", upload.fields(spop_files), function (req, res) {
     let body = req.body;
     let files = req.files;
 
+    console.log(files);
+
     form.list_fields_spop((err, fields) => {
         if (err) return res.json({ status: false, message: err });
 
         fields.splice(fields.indexOf("id_spop"), 1);
         fields.splice(fields.indexOf("approved"), 1);
         fields.splice(fields.indexOf("kode_znt"), 1);
-        fields.splice(fields.indexOf("file_izin_mendirikan_bangunan"),1);
+        fields.splice(fields.indexOf("file_izin_mendirikan_bangunan"), 1);
 
 
         for (let prop in files) {
@@ -111,12 +112,17 @@ router.post("/simpan_spop", upload.fields(spop_files), function (req, res) {
             }
         }
 
-        console.log("Body",body);
-
-        response.setRequiredPost(fields, body, (errorFields) => {
-            if (errorFields.length) return res.json({ status: "ERRORFIELDS", fields: errorFields });
-            body = response.filterMethodField(body, fields);
+        Response.setRequiredPost(fields, body, (errorFields) => {
+            if (errorFields.length) {
+                File.deleteUploaded(files);
+                return res.json({ status: "ERRORFIELDS", fields: errorFields });
+            }
+            fields.push("file_izin_mendirikan_bangunan");
+            body = Response.filterMethodField(body, fields);
             form.simpan_spop(body, (err, data) => {
+                if (err) {
+                    File.deleteUploaded(files);
+                }
                 res.json({
                     status: (err) ? false : true,
                     message: err,
@@ -135,9 +141,9 @@ router.post("/simpan_lspop", function (req, res) {
         fields.splice(fields.indexOf("id_lspop"), 1);
         fields.splice(fields.indexOf("jenis_pagar"), 1);
         fields.splice(fields.indexOf(""));
-        response.setRequiredPost(fields, body, (errorFields) => {
+        Response.setRequiredPost(fields, body, (errorFields) => {
             if (errorFields.length) return res.json({ status: "ERRORFIELDS", fields: errorFields });
-            body = response.filterMethodField(body, fields);
+            body = Response.filterMethodField(body, fields);
             form.simpan_lspop(body, (err, data) => {
                 res.json({
                     status: (err) ? false : true,
@@ -147,6 +153,10 @@ router.post("/simpan_lspop", function (req, res) {
             });
         });
     });
+});
+
+router.get("/uploads/:img", function (req, res) {
+    res.sendFile(path.resolve(__dirname, "..", "assets", "uploads",req.params.img));
 });
 
 module.exports = router;
