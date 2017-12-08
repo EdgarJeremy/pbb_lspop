@@ -1,5 +1,6 @@
 # Node modules
 /node_modules
+/assets
 /client/node_modules
 
 # Databases

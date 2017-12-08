@@ -183,7 +183,7 @@ export default class DaftarSpop extends React.Component {
                                 <Table>
                                     <TableHeader adjustForCheckbox={false} className="content-table-header" displaySelectAll={false}>
                                         <TableRow>
-                                            <TableHeaderColumn>NO</TableHeaderColumn>
+                                            {/* <TableHeaderColumn>NO</TableHeaderColumn> */}
                                             <TableHeaderColumn>NOP</TableHeaderColumn>
                                             <TableHeaderColumn>NAMA WP</TableHeaderColumn>
                                             <TableHeaderColumn>JALAN OP</TableHeaderColumn>
@@ -194,7 +194,7 @@ export default class DaftarSpop extends React.Component {
                                     <TableBody showRowHover displayRowCheckbox={false}>
                                         {this.state.spops.map((spop, i) => (
                                             <TableRow key={i}>
-                                                <TableRowColumn>{i + 1}</TableRowColumn>
+                                                {/* <TableRowColumn>{i + 1}</TableRowColumn> */}
                                                 <TableRowColumn>{spop.nop}</TableRowColumn>
                                                 <TableRowColumn>{spop.nama.toUpperCase()}</TableRowColumn>
                                                 <TableRowColumn>{spop.jalan_op.toUpperCase()}</TableRowColumn>

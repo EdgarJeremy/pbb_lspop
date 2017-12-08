@@ -94,7 +94,7 @@ a:hover {
     width: 70%;
 }
 .heading-container img {
-    width: 20%;
+    width: 200px;
     float: right;
 }
 .heading-container .left h3 {
@@ -103,13 +103,15 @@ a:hover {
 .body-container {
     padding: 20px;
     display: inline-block;
-    width: 100%;
+    /* width: 100%; */
 }
 .pages-container {
     padding: 0;
-    margin-top: -4px;
-    position: relative;
-    height: 100vh;
+    position: fixed;
+    top: 124px;
+    left: 0;
+    bottom: 0;
+    right: 0;
 }
 .form-section {
     background-color: #222;
@@ -164,11 +166,17 @@ span.overlay {
 }
 .page {
     border-left: 1px solid #aaa;
-    position: absolute !important;
+    /* position: absolute !important;
     top: 0;
     right: 0;
     bottom: 0;
-    width: 80%;
+    width: 80%; */
+    height: 100%;
+    margin-left: 20%;
+}
+.page > div {
+    height: 100%;
+    overflow-x: hidden;
 }
 .navigation h2 {
     padding: 15px;
