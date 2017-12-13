@@ -39,7 +39,7 @@ export default class Admin extends React.Component {
     }
 
     componentWillUpdate(o, n) {
-        console.log(o, n);
+        // console.log(o, n);
     }
 
     cekLogin() {
@@ -62,7 +62,7 @@ export default class Admin extends React.Component {
 
     onLogout() {
         AdminApi.logout().then((response) => {
-            console.log(response);
+            // console.log(response);
             this.props.history.push("/login");
         });
     }

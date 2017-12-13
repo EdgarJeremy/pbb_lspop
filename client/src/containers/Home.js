@@ -18,7 +18,7 @@ export default class Home extends React.Component {
                     <hr style={{ borderWidth: 0, borderBottomWidth: 1, borderBottomColor: "#ddd", marginRight: 30, marginLeft: 30, marginTop: 20, marginBottom: 20 }} />
                     <div className="row boxes">
                         <h2 style={{ marginBottom: 20, textAlign: "center" }}>- Pilih Formulir -</h2>
-                        <div className="col-md-6">
+                        <div className="col-md-4">
                             <Card>
                                 <div className="card-header">
                                     <h3>SPOP</h3>
@@ -29,7 +29,7 @@ export default class Home extends React.Component {
                                 <div className="card-foot">
                                     <Link to="/spop">
                                         <RaisedButton
-                                            icon={<i className="material-icons">input</i>}
+                                            icon={<i className="material-icons">trending_flat</i>}
                                             label="INPUT"
                                             fullWidth={true}
                                             primary={false} />
@@ -37,7 +37,7 @@ export default class Home extends React.Component {
                                 </div>
                             </Card>
                         </div>
-                        <div className="col-md-6">
+                        <div className="col-md-4">
                             <Card>
                                 <div className="card-header">
                                     <h3>LSPOP</h3>
@@ -49,8 +49,28 @@ export default class Home extends React.Component {
                                     <Link to="/lspop">
                                         <RaisedButton
                                             style={{ backgroundColor: "#ccc" }}
-                                            icon={<i className="material-icons">input</i>}
+                                            icon={<i className="material-icons">trending_flat</i>}
                                             label="INPUT"
+                                            fullWidth={true}
+                                            secondary={false} />
+                                    </Link>
+                                </div>
+                            </Card>
+                        </div>
+                        <div className="col-md-4">
+                            <Card>
+                                <div className="card-header">
+                                    <h3>CEK STATUS</h3>
+                                </div>
+                                <div className="card-body">
+                                    <img className="card-icon" alt="CEK STATUS" src="data:image/svg+xml;utf8;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pgo8IS0tIEdlbmVyYXRvcjogQWRvYmUgSWxsdXN0cmF0b3IgMTkuMC4wLCBTVkcgRXhwb3J0IFBsdWctSW4gLiBTVkcgVmVyc2lvbjogNi4wMCBCdWlsZCAwKSAgLS0+CjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeD0iMHB4IiB5PSIwcHgiIHZpZXdCb3g9IjAgMCA1MDcuMiA1MDcuMiIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgNTA3LjIgNTA3LjI7IiB4bWw6c3BhY2U9InByZXNlcnZlIiB3aWR0aD0iNTEycHgiIGhlaWdodD0iNTEycHgiPgo8Y2lyY2xlIHN0eWxlPSJmaWxsOiMzMkJBN0M7IiBjeD0iMjUzLjYiIGN5PSIyNTMuNiIgcj0iMjUzLjYiLz4KPHBhdGggc3R5bGU9ImZpbGw6IzBBQTA2RTsiIGQ9Ik0xODguOCwzNjhsMTMwLjQsMTMwLjRjMTA4LTI4LjgsMTg4LTEyNy4yLDE4OC0yNDQuOGMwLTIuNCwwLTQuOCwwLTcuMkw0MDQuOCwxNTJMMTg4LjgsMzY4eiIvPgo8Zz4KCTxwYXRoIHN0eWxlPSJmaWxsOiNGRkZGRkY7IiBkPSJNMjYwLDMxMC40YzExLjIsMTEuMiwxMS4yLDMwLjQsMCw0MS42bC0yMy4yLDIzLjJjLTExLjIsMTEuMi0zMC40LDExLjItNDEuNiwwTDkzLjYsMjcyLjggICBjLTExLjItMTEuMi0xMS4yLTMwLjQsMC00MS42bDIzLjItMjMuMmMxMS4yLTExLjIsMzAuNC0xMS4yLDQxLjYsMEwyNjAsMzEwLjR6Ii8+Cgk8cGF0aCBzdHlsZT0iZmlsbDojRkZGRkZGOyIgZD0iTTM0OC44LDEzMy42YzExLjItMTEuMiwzMC40LTExLjIsNDEuNiwwbDIzLjIsMjMuMmMxMS4yLDExLjIsMTEuMiwzMC40LDAsNDEuNmwtMTc2LDE3NS4yICAgYy0xMS4yLDExLjItMzAuNCwxMS4yLTQxLjYsMGwtMjMuMi0yMy4yYy0xMS4yLTExLjItMTEuMi0zMC40LDAtNDEuNkwzNDguOCwxMzMuNnoiLz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8L3N2Zz4K" />
+                                </div>
+                                <div className="card-foot">
+                                    <Link to="/cek_status">
+                                        <RaisedButton
+                                            style={{ backgroundColor: "#ccc" }}
+                                            icon={<i className="material-icons">check_circle</i>}
+                                            label="CEK"
                                             fullWidth={true}
                                             secondary={false} />
                                     </Link>

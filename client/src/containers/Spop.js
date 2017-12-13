@@ -136,7 +136,12 @@ export default class Spop extends React.Component {
                     .cancelable(true)
                     .setTitle("Penginputan berhasil!")
                     .withLoading(false)
-                    .setMessage("Data yang anda isi sudah berhasil terinput di database kami")
+                    .setMessage(
+                        <div>
+                            <p>Data yang anda isi sudah berhasil terinput di database kami</p>
+                            <p>Nomor pendaftaran anda : <b>{response.data.nomor_pendaftaran}</b></p>
+                        </div>
+                    )
                     .open();
                 this.setState({
                     form_data: {
@@ -241,7 +246,7 @@ export default class Spop extends React.Component {
                             </div>
                         </div>
                         {/* Formulir */}
-                        <div className="body-container">
+                        <div className="body-container" style={{ width: "100%" }}>
                             <Card>
                                 <div className="form-section">
                                     <h2>Formulir</h2>
@@ -316,7 +321,7 @@ export default class Spop extends React.Component {
                             </Card>
                         </div>
                         {/* Data subjek pajak */}
-                        <div className="body-container">
+                        <div className="body-container" style={{ width: "100%" }}>
                             <Card>
                                 <div className="form-section">
                                     <h2>Data Subjek Pajak</h2>
@@ -402,7 +407,7 @@ export default class Spop extends React.Component {
                             </Card>
                         </div>
                         {/* Data letak objek pajak */}
-                        <div className="body-container">
+                        <div className="body-container" style={{ width: "100%" }}>
                             <Card>
                                 <div className="form-section">
                                     <h2>Data Letak Objek Pajak</h2>
@@ -444,7 +449,7 @@ export default class Spop extends React.Component {
                             </Card>
                         </div>
                         {/* Data Bumi */}
-                        <div className="body-container">
+                        <div className="body-container" style={{ width: "100%" }}>
                             <Card>
                                 <div className="form-section">
                                     <h2>Data Bumi</h2>
@@ -490,7 +495,7 @@ export default class Spop extends React.Component {
                             </Card>
                         </div>
                         {/* File Pendukung */}
-                        <div className="body-container">
+                        <div className="body-container" style={{ width: "100%" }}>
                             <Card>
                                 <div className="form-section">
                                     <h2>File Pendukung</h2>

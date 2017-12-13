@@ -1,10 +1,11 @@
 const settings = {
-    host: "localhost",
+    host: "127.0.0.1",
     database: "form_pajak",
     user: "root",
     password: ""
 }
 
-const Query = require("node-querybuilder").QueryBuilder(settings, "mysql", "single");
+const node_querybuilder = require("node-querybuilder");
+const Query = node_querybuilder.QueryBuilder(settings, "mysql", "single");
 
 module.exports = Query;

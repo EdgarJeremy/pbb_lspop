@@ -52,6 +52,7 @@ export default class DaftarSpop extends React.Component {
     }
 
     model = {
+        id_spop: "ID",
         jenis_formulir: "Jenis Formulir",
         jenis_transaksi: "Jenis Transaksi",
         nop: "NOP",
@@ -83,7 +84,9 @@ export default class DaftarSpop extends React.Component {
         file_ktp: "File KTP",
         file_bukti_kepemilikan: "File Bukti Kepemilikan",
         file_surat_keterangan_kelurahan: "File Surat Keterangan Kelurahan",
-        file_izin_mendirikan_bangunan: "File Izin Mendirikan Bangunan"
+        file_izin_mendirikan_bangunan: "File Izin Mendirikan Bangunan",
+        tanggal_pendaftaran: "Tanggal Pendaftaran",
+        nomor_pendaftaran: "Nomor Pendaftaran"
     }
 
     constructor(props) {

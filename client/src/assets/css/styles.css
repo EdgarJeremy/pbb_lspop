@@ -22,7 +22,7 @@ a:hover {
     margin: 0 auto;
 }
 .card-flat {
-    max-width: 420px;
+    max-width: 550px;
     margin-top: 60px;
     background-color: #ecf0f1;
     padding: 20px;
@@ -31,7 +31,7 @@ a:hover {
     text-align: center;
 }
 .logo-image {
-    width: 60%;
+    width: 90%;
 }
 .boxes {
     padding-left: 10px;

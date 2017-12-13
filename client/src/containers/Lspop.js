@@ -183,7 +183,7 @@ export default class Lspop extends React.Component {
                             </div>
                         </div>
                         {/* Formulir */}
-                        <div className="body-container">
+                        <div className="body-container" style={{width: "100%"}}>
                             <Card>
                                 <div className="form-section">
                                     <h2>Formulir</h2>
@@ -234,7 +234,7 @@ export default class Lspop extends React.Component {
                             </Card>
                         </div>
                         {/* Rincian Data Bangunan */}
-                        <div className="body-container">
+                        <div className="body-container" style={{width: "100%"}}>
                             <Card>
                                 <div className="form-section">
                                     <h2>Rincian Data Bangunan</h2>
@@ -385,7 +385,7 @@ export default class Lspop extends React.Component {
                             </Card>
                         </div>
                         {/* Fasilitas */}
-                        <div className="body-container">
+                        <div className="body-container" style={{width: "100%"}}>
                             <Card>
                                 <div className="form-section">
                                     <h2>Fasilitas</h2>

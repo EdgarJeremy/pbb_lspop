@@ -31,6 +31,10 @@ const Api = {
             .then((response) => response.data);
     },
 
+    cek_status: (params) => {
+        return ax.get("/cek_status", { params }).then((response) => response.data);
+    },
+
     login: (data, progress) => {
         return ax.post("/login", data, {
             onUploadProgress: (e) => {
