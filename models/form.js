@@ -37,8 +37,16 @@ const form = {
             });
         });
     },
-    simpan_lspop: (lspop, cb) => {
-        Query.insert("lspop", lspop, cb);
+    simpan_lspop: function(lspop, cb){
+        this.generate_nomor_pendaftaran("lspop",(err,data) => {
+            if(err) return cb(err);
+            lspop.tanggal_pendaftaran = data.tanggal_pendaftaran;
+            lspop.nomor_pendaftaran = data.nomor_pendaftaran;
+            Query.insert("lspop", lspop, (err,res)=>{
+                if(err) return cb(err);
+                cb(null,data);
+            });
+        });
     },
     list_fields_spop: (cb) => {
         Query.query("DESCRIBE `spop`", function (err, data) {

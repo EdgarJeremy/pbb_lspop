@@ -24,7 +24,7 @@ export default class DataPendaftaran extends React.Component {
         raw: null
     }
 
-    model = {
+    model_spop = {
         id_spop: "ID",
         jenis_formulir: "Jenis Formulir",
         jenis_transaksi: "Jenis Transaksi",
@@ -57,7 +57,60 @@ export default class DataPendaftaran extends React.Component {
         file_ktp: "File KTP",
         file_bukti_kepemilikan: "File Bukti Kepemilikan",
         file_surat_keterangan_kelurahan: "File Surat Keterangan Kelurahan",
-        file_izin_mendirikan_bangunan: "File Izin Mendirikan Bangunan"
+        file_izin_mendirikan_bangunan: "File Izin Mendirikan Bangunan",
+        approved: "Approved",
+        tanggal_pendaftaran: "Tanggal Pendaftaran",
+        nomor_pendaftaran: "Nomor Pendaftaran"
+    }
+
+    model_lspop = {
+        jenis_formulir: "Jenis Formulir",
+        jenis_transaksi: "Jenis Transaksi",
+        nop: "NOP",
+        nomor_bangunan: "Nomor Bangunan",
+        konstruksi: "Konstruksi",
+        jenis_bangunan: "Jenis Bangunan",
+        atap: "Atap",
+        luas_bangunan: "Luas Bangunan",
+        dinding: "Dinding",
+        tahun_dibangun: "Tahun Dibangun",
+        lantai: "Lantai",
+        kondisi_bangunan: "Kondisi Bangunan",
+        langit_langit: "Langit-langit",
+        jumlah_lantai: "Jumlah Lantai",
+        tahun_renovasi: "Tahun Renovasi",
+        daya_listrik: "Daya Listrik",
+        jumlah_ac_split: "Jumlah AC Split",
+        jumlah_ac_window: "Jumlah AC Window",
+        ac_central: "AC Central",
+        luas_kolam_renang: "Luas Kolam Renang",
+        finishing_kolam: "Finishing Kolam",
+        luas_perkerasan_halaman_berat: "Luas Perkerasan Halaman (Berat)",
+        luas_perkerasan_halaman_dg_penutup_lantai: "Luas Perkerasan Halaman (Dg. Penutup Lantai)",
+        luas_perkerasan_halaman_ringan: "Luas Perkerasan Halaman (Ringan)",
+        luas_perkerasan_halaman_sedang: "Luas Perkerasan Halaman (Sedang)",
+        jumlah_lapangan_teknis_aspal_no_lampu: "Jumlah Lapangan Teknis Aspal (-lampu)",
+        jumlah_lapangan_teknis_aspal_with_lampu: "Jumlah Lapangan Teknis Aspal (+lampu)",
+        jumlah_lapangan_teknis_beton_no_lampu: "Jumlah Lapangan Teknis Beton (-lampu)",
+        jumlah_lapangan_teknis_beton_with_lampu: "Jumlah Lapangan Teknis Beton (+lampu)",
+        jumlah_lapangan_teknis_tanah_liat_no_lampu: "Jumlah Lapangan Teknis Tanah Liat (-lampu)",
+        jumlah_lapangan_teknis_tanah_liat_with_lampu: "Jumlah Lapangan Teknis Tanah Liat (-lampu)",
+        jumlah_lift_barang: "Jumlah Lift Barang",
+        jumlah_lift_kapsul: "Jumlah Lift Kapsul",
+        jumlah_lift_penumpang: "Jumlah Lift Penumpang",
+        jumlah_tangga_berjalan_k_080: "Jumlah Tangga Berjalan (berat <= 80)",
+        jumlah_tangga_berjalan_l_080: "Jumlah Tangga Berjalan (berat > 80)",
+        panjang_pagar: "Panjang Pagar",
+        bahan_pagar: "Bahan Pagar",
+        jenis_pagar: "Jenis Pagar",
+        jumlah_pabx: "Jumlah Pabx",
+        kedalaman_sumur_artesis: "Kedalaman Sumur Artesis",
+        pemadam_kebakaran_fire_alarm: "Fire Alarm",
+        pemadam_kebakaran_hydrant: "Hydrant",
+        pemadam_kebakaran_sprinkler: "Sprinkler",
+        approved: "Approved",
+        tanggal_pendaftaran: "Tanggal Pendaftaran",
+        nomor_pendaftaran: "Nomor Pendaftaran"
     }
 
     constructor(props) {
@@ -74,7 +127,6 @@ export default class DataPendaftaran extends React.Component {
                             pendaftaran.push({ key: data, value: response.data[data] });
                         }
                     }
-                    console.log(pendaftaran);
                     this.setState({
                         ready: true,
                         pendaftaran: pendaftaran,
@@ -98,6 +150,7 @@ export default class DataPendaftaran extends React.Component {
     }
 
     render() {
+        let model = (this.props.match.params.jenis_surat === "spop") ? this.model_spop : this.model_lspop;
         if (this.state.ready) {
             if (this.state.pendaftaran) {
                 return (
@@ -117,7 +170,7 @@ export default class DataPendaftaran extends React.Component {
                                     </TableRow>
                                     {this.state.pendaftaran.map((data, i) => (
                                         <TableRow key={i}>
-                                            <TableRowColumn><b>{this.model[data.key]}</b></TableRowColumn>
+                                            <TableRowColumn><b>{model[data.key]}</b></TableRowColumn>
                                             <TableRowColumn>{
                                                 (/file_/.test(data.key) && data.value != null) ?
                                                     <div><RaisedButton label="Buka" onClick={() => this.open_attach(data.value)} /></div> :

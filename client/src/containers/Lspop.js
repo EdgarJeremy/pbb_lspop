@@ -13,6 +13,7 @@ import LoadingOverlay from "../components/LoadingOverlay";
 import AlertPopup from "../components/AlertPopup";
 
 import Api from "../services/Api";
+import Alert from "../components/Alert";
 
 export default class Lspop extends React.Component {
 
@@ -64,9 +65,7 @@ export default class Lspop extends React.Component {
 
     state = {
         form_data: { ...this.model },
-        error_fields: {},
-        loadingOverlay: false,
-        successPopup: false
+        error_fields: {}
     }
 
     constructor(props) {
@@ -123,7 +122,12 @@ export default class Lspop extends React.Component {
     }
 
     onSubmit() {
-        this.setState({ loadingOverlay: true });
+        this.Alert.setTitle("Loading..")
+            .cancelable(false)
+            .withLoading(true)
+            .setMessage("Mengupload data...")
+            .open();
+
         const { form_data } = this.state;
         const lspop_data = {
             ...form_data,
@@ -139,22 +143,36 @@ export default class Lspop extends React.Component {
                         error_fields[response.fields[i]] = `Harus diisi`;
                     }
                 }
+                this.Alert.close();
                 this.setState({ error_fields });
             } else if (response.status) {
+                this.Alert
+                .cancelable(true)
+                .setTitle("Penginputan berhasil!")
+                .withLoading(false)
+                .setMessage(
+                    <div>
+                        <p>Data yang anda isi sudah berhasil terinput di database kami</p>
+                        <p>Nomor pendaftaran anda : <b>{response.data.nomor_pendaftaran}</b></p>
+                    </div>
+                )
+                .open();
                 this.setState({
-                    successPopup: true, form_data: {
+                    form_data: {
                         ...this.model,
                         nop: ["", "", "", "", "", "", ""]
                     }
                 });
             } else {
-                alert(JSON.stringify(response.message));
+                this.Alert.cancelable(true).withLoading(false).setTitle("Fatal Error").setMessage(JSON.stringify(response.message)).open();
             }
-            this.setState({ loadingOverlay: false });
         }).catch(err => {
-            alert(JSON.stringify(err));
-            this.setState({ loadingOverlay: false });
+            this.Alert.cancelable(true).withLoading(false).setTitle("Fatal Error").setMessage(JSON.stringify(err)).open();
         });
+    }
+
+    componentDidMount() {
+        this.Alert = this.refs.Alert;
     }
 
     render() {
@@ -183,7 +201,7 @@ export default class Lspop extends React.Component {
                             </div>
                         </div>
                         {/* Formulir */}
-                        <div className="body-container" style={{width: "100%"}}>
+                        <div className="body-container" style={{ width: "100%" }}>
                             <Card>
                                 <div className="form-section">
                                     <h2>Formulir</h2>
@@ -234,7 +252,7 @@ export default class Lspop extends React.Component {
                             </Card>
                         </div>
                         {/* Rincian Data Bangunan */}
-                        <div className="body-container" style={{width: "100%"}}>
+                        <div className="body-container" style={{ width: "100%" }}>
                             <Card>
                                 <div className="form-section">
                                     <h2>Rincian Data Bangunan</h2>
@@ -385,7 +403,7 @@ export default class Lspop extends React.Component {
                             </Card>
                         </div>
                         {/* Fasilitas */}
-                        <div className="body-container" style={{width: "100%"}}>
+                        <div className="body-container" style={{ width: "100%" }}>
                             <Card>
                                 <div className="form-section">
                                     <h2>Fasilitas</h2>
@@ -512,8 +530,7 @@ export default class Lspop extends React.Component {
                                 icon={<i style={{ color: "#fff" }} className="material-icons">save</i>} />
                         </div>
                     </Card>
-                    <LoadingOverlay visible={this.state.loadingOverlay} loadingColor="#3498db" title="Mengupload data.." />
-                    <AlertPopup open={this.state.successPopup} onClose={() => this.setState({ successPopup: false })} title="Konfirmasi berhasil" content="Data berhasil disimpan di database" />
+                    <Alert ref="Alert" />
                 </div>
             </MuiThemeProvider>
         );

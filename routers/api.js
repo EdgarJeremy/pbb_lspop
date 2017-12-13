@@ -109,7 +109,6 @@ router.post("/simpan_spop", upload.fields(spop_files), function (req, res) {
         fields.splice(fields.indexOf("nop_bersama"), 1);
         fields.splice(fields.indexOf("nop_asal"), 1);
 
-
         for (let prop in files) {
             if (prop) {
                 body[prop] = files[prop][0].filename;
@@ -144,7 +143,11 @@ router.post("/simpan_lspop", function (req, res) {
         if (err) return res.json({ status: false, message: err });
         fields.splice(fields.indexOf("id_lspop"), 1);
         fields.splice(fields.indexOf("jenis_pagar"), 1);
-        fields.splice(fields.indexOf(""));
+        fields.splice(fields.indexOf("approved"), 1);
+        fields.splice(fields.indexOf("tanggal_pendaftaran"), 1);
+        fields.splice(fields.indexOf("nomor_pendaftaran"), 1);
+        fields.splice(fields.indexOf("id_pengguna"), 1);
+
         Response.setRequiredPost(fields, body, (errorFields) => {
             if (errorFields.length) return res.json({ status: "ERRORFIELDS", fields: errorFields });
             body = Response.filterMethodField(body, fields);
@@ -156,6 +159,7 @@ router.post("/simpan_lspop", function (req, res) {
                 });
             });
         });
+        
     });
 });
 
@@ -167,7 +171,7 @@ router.get("/cek_status", function (req, res) {
     let query = req.query;
     Response.setRequiredPost(["jenis_surat", "nomor_pendaftaran"], query, (errorFields) => {
         if (errorFields.length) return res.json({ status: "ERRORFIELDS", fields: errorFields });
-        form.cek_status(query.jenis_surat,query.nomor_pendaftaran,(err,data) => {
+        form.cek_status(query.jenis_surat, query.nomor_pendaftaran, (err, data) => {
             res.json({
                 status: (!err && data[0]) ? true : false,
                 message: err,

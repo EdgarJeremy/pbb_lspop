@@ -8,7 +8,14 @@ const app = express();
 const cors = require("cors");
 const session = require("express-session");
 const PORT = 3001;
-const ALLOW_ORIGIN = ["http://localhost:3000","http://118.97.134.116:3000","http://36.67.90.85:3000","http://192.168.100.102:3000","chrome-extension://fhbjgbiflinjbdggehcddcbncdddomop"];
+const ALLOW_ORIGIN = [
+    "http://localhost:3000",
+    "http://118.97.134.116:3000",
+    "http://36.67.90.85:3000",
+    "http://192.168.100.102:3000",
+    "http://192.168.137.1:3000",
+    "chrome-extension://fhbjgbiflinjbdggehcddcbncdddomop"
+];
 
 app.use(bodyParser.urlencoded({
     extended: true
