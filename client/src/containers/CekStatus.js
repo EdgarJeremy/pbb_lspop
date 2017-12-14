@@ -5,10 +5,9 @@ import React from "react";
 import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
 import RaisedButton from "material-ui/RaisedButton";
 import { Card } from "material-ui/Card";
-import { Link, Redirect } from "react-router-dom";
+import { Link } from "react-router-dom";
 import TextField from "material-ui/TextField";
 import LinearProgress from "material-ui/LinearProgress";
-import LoadingScreen from "../components/LoadingScreen";
 import SelectField from "material-ui/SelectField";
 import MenuItem from "material-ui/MenuItem";
 

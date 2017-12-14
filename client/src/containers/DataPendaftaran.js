@@ -3,15 +3,12 @@ import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
 import {
     Table,
     TableBody,
-    TableHeader,
-    TableHeaderColumn,
     TableRow,
     TableRowColumn,
 } from 'material-ui/Table';
 import RaisedButton from "material-ui/RaisedButton";
 import { Card } from "material-ui/Card";
-import { Link, Redirect } from "react-router-dom";
-import LinearProgress from "material-ui/LinearProgress";
+import { Redirect } from "react-router-dom";
 import LoadingScreen from "../components/LoadingScreen";
 
 import Api from "../services/Api";
@@ -111,10 +108,6 @@ export default class DataPendaftaran extends React.Component {
         approved: "Approved",
         tanggal_pendaftaran: "Tanggal Pendaftaran",
         nomor_pendaftaran: "Nomor Pendaftaran"
-    }
-
-    constructor(props) {
-        super(props);
     }
 
     cekData() {

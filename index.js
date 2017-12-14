@@ -7,8 +7,10 @@ const path = require("path");
 const app = express();
 const cors = require("cors");
 const session = require("express-session");
+const pdf = require("express-pdf");
 const PORT = 3001;
 const ALLOW_ORIGIN = [
+    "http://localhost",
     "http://localhost:3000",
     "http://118.97.134.116:3000",
     "http://36.67.90.85:3000",
@@ -39,7 +41,8 @@ app.use(session({
     resave: true,
     saveUninitialized: false
 }));
-app.use(express.static(path.resolve(__dirname,"client","build")));
+app.use(pdf);
+// app.use(express.static(path.resolve(__dirname,"client","build")));
 
 /**
  * Routers
@@ -52,9 +55,9 @@ app.use("/administrator",admin);
 /**
  * Serve client
  */
-app.get("*",(req,res)=>{
-    res.sendFile(path.resolve(__dirname,"client","build","index.html"));
-});
+// app.get("*",(req,res)=>{
+//     res.sendFile(path.resolve(__dirname,"client","build","index.html"));
+// });
 
 /**
  * Fire!!!!1!!1!!

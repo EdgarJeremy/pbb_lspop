@@ -14,12 +14,14 @@ import FlatButton from 'material-ui/FlatButton';
 
 import LoadingOverlay from "../components/LoadingOverlay";
 import Alert from "../components/Alert";
+import config from "../config";
 
 
 /**
  * Services
  */
 import Api from "../services/Api";
+
 
 export default class Spop extends React.Component {
 
@@ -132,15 +134,19 @@ export default class Spop extends React.Component {
                 this.Alert.close();
                 this.setState({ error_fields });
             } else if (response.status) {
+                const link = document.createElement("a");
+                link.href = `${config.api_base_url}/api/download_surat/spop/${response.data.nomor_pendaftaran}`;
+                document.body.appendChild(link);
+                link.click();
                 this.Alert
                     .cancelable(true)
                     .setTitle("Penginputan berhasil!")
                     .withLoading(false)
                     .setMessage(
-                        <div>
-                            <p>Data yang anda isi sudah berhasil terinput di database kami</p>
-                            <p>Nomor pendaftaran anda : <b>{response.data.nomor_pendaftaran}</b></p>
-                        </div>
+                    <div>
+                        <p>Data yang anda isi sudah berhasil terinput di database kami</p>
+                        <p>Nomor pendaftaran anda : <b>{response.data.nomor_pendaftaran}</b></p>
+                    </div>
                     )
                     .open();
                 this.setState({

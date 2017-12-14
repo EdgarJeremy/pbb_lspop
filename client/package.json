@@ -7,6 +7,7 @@
     "material-ui": "^0.19.4",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
+    "react-file-download": "^0.3.5",
     "react-paginate": "^5.0.0",
     "react-router": "^4.2.0",
     "react-router-dom": "^4.2.2",

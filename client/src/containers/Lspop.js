@@ -9,11 +9,10 @@ import RaisedButton from "material-ui/RaisedButton";
 import Checkbox from "material-ui/Checkbox";
 import { Link } from "react-router-dom";
 
-import LoadingOverlay from "../components/LoadingOverlay";
-import AlertPopup from "../components/AlertPopup";
 
 import Api from "../services/Api";
 import Alert from "../components/Alert";
+import config from "../config";
 
 export default class Lspop extends React.Component {
 
@@ -146,6 +145,11 @@ export default class Lspop extends React.Component {
                 this.Alert.close();
                 this.setState({ error_fields });
             } else if (response.status) {
+                const link = document.createElement("a");
+                link.href = `${config.api_base_url}/api/download_surat/lspop/${response.data.nomor_pendaftaran}`;
+                document.body.appendChild(link);
+                link.click();
+
                 this.Alert
                 .cancelable(true)
                 .setTitle("Penginputan berhasil!")
