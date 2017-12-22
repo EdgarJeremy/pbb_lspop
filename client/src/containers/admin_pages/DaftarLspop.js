@@ -16,6 +16,9 @@ import Dialog from "material-ui/Dialog";
 import FlatButton from "material-ui/FlatButton";
 import Alert from "../../components/Alert";
 
+import { Link } from "react-router-dom";
+import FormEditLspop from "../../components/FormEditLspop";
+
 export default class DaftarLspop extends React.Component {
 
     state = {
@@ -29,6 +32,7 @@ export default class DaftarLspop extends React.Component {
         ready: false,
         detail_popup: false,
         selected_lspop_data: [],
+        selected_lspop_object: {},
         attach_popup: false,
         attach_file: ""
     }
@@ -82,6 +86,7 @@ export default class DaftarLspop extends React.Component {
 
     constructor(props) {
         super(props);
+        this.match = props.match;
         this.ubah_page = this.ubah_page.bind(this);
     }
 
@@ -116,13 +121,15 @@ export default class DaftarLspop extends React.Component {
 
     open_detail(lspop) {
         const selected_lspop_data = [];
+        const selected_lspop_object = { ...lspop };
         for (let data in lspop) {
             if (lspop.hasOwnProperty(data) && data !== "id_spop" && data !== "approved") {
                 selected_lspop_data.push({ key: data, value: lspop[data] });
             }
         }
+        selected_lspop_object.nop = selected_lspop_object.nop.split(".");
 
-        this.setState({ detail_popup: true, selected_lspop_data });
+        this.setState({ detail_popup: true, selected_lspop_data, selected_lspop_object });
     }
 
     componentDidUpdate() {
@@ -164,7 +171,20 @@ export default class DaftarLspop extends React.Component {
     render() {
         return (
             <div>
-                <h2 className="content-title">LSPOP Masuk</h2>
+                <div className="content-head">
+                    <div className="left">
+                        <h2 className="content-title">LSPOP Masuk</h2>
+                    </div>
+                    <div className="right">
+                        <Link to={`${this.match.path}/tambah`}>
+                            <RaisedButton
+                                icon={<i style={{ color: "#fff" }} className="material-icons">add_circle</i>}
+                                label="TAMBAH"
+                                backgroundColor="#3498db"
+                                labelColor="#fff" />
+                        </Link>
+                    </div>
+                </div>
                 <div className="content">
                     {
                         (!this.state.ready) ? <LoadingScreen color="#222" /> :
@@ -218,14 +238,17 @@ export default class DaftarLspop extends React.Component {
                                     activeClassName={"active"} />
                                 <Divider />
                                 <Dialog
+                                    contentStyle={{maxWidth: "2000px"}}
                                     autoScrollBodyContent={true}
-                                    title="Data LSPOP"
+                                    title={<div>Data LSPOP <b>{this.state.selected_lspop_object.nomor_pendaftaran}</b></div>}
                                     actions={[
+                                        <FlatButton label="SIMPAN" onClick={() => this.refs.FormEditLspop.onSubmit()} />,
                                         <FlatButton label="TUTUP" onClick={() => this.setState({ detail_popup: false })} />
                                     ]}
                                     modal={false}
                                     open={this.state.detail_popup}>
-                                    <Table>
+                                    <FormEditLspop form_data={this.state.selected_lspop_object} update_data={this.ambil_lspop.bind(this)} ref="FormEditLspop" />
+                                    {/* <Table>
                                         <TableBody showRowHover displayRowCheckbox={false}>
                                             {this.state.selected_lspop_data.map((data, i) => (
                                                 <TableRow key={i}>
@@ -236,7 +259,7 @@ export default class DaftarLspop extends React.Component {
                                                 </TableRow>
                                             ))}
                                         </TableBody>
-                                    </Table>
+                                    </Table> */}
                                 </Dialog>
                                 <Alert ref="Alert" />
                             </div>

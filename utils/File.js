@@ -15,6 +15,11 @@ const File = {
                 });
             }
         }
+    },
+    deleteOldFile: (filename) => {
+        fs.unlink(path.resolve(__dirname,"...","assets/uploads",filename),function(err){
+            console.log(err);
+        });
     }
 }
 

@@ -8,15 +8,17 @@ import Dialog from "material-ui/Dialog";
 import FlatButton from 'material-ui/FlatButton';
 import AdminApi from "../services/AdminApi";
 import Api from "../services/Api";
-import LoadingScreen from "../components/LoadingScreen";
 
 /**
- * Pages
+ * Pages & Components
  */
 import AdminHome from "./admin_pages/AdminHome";
 import DaftarSpop from "./admin_pages/DaftarSpop";
 import DaftarLspop from "./admin_pages/DaftarLspop";
 import DaftarPengguna from "./admin_pages/DaftarPengguna";
+import TambahSpop from "./admin_pages/Spop/TambahSpop";
+import TambahLspop from "./admin_pages/Lspop/TambahLspop";
+import LoadingScreen from "../components/LoadingScreen";
 
 export default class Admin extends React.Component {
 
@@ -62,7 +64,6 @@ export default class Admin extends React.Component {
 
     onLogout() {
         AdminApi.logout().then((response) => {
-            // console.log(response);
             this.props.history.push("/login");
         });
     }
@@ -105,11 +106,13 @@ export default class Admin extends React.Component {
                                     </div>
                                     <div className="page">
                                         <Route path={`${this.match.path}/home`} component={AdminHome} />
-                                        <Route path={`${this.match.path}/spop`} render={(props) => <DaftarSpop {...props} approved={0} />} />
-                                        <Route path={`${this.match.path}/lspop`} render={(props) => <DaftarLspop {...props} approved={0} />} />
+                                        <Route path={`${this.match.path}/spop`} exact render={(props) => <DaftarSpop {...props} approved={0} />} />
+                                        <Route path={`${this.match.path}/lspop`} exact render={(props) => <DaftarLspop {...props} approved={0} />} />
                                         <Route path={`${this.match.path}/spop_approved`} render={(props) => <DaftarSpop {...props} approved={1} />} />
                                         <Route path={`${this.match.path}/lspop_approved`} render={(props) => <DaftarLspop {...props} approved={1} />} />
                                         <Route path={`${this.match.path}/pengguna`} component={DaftarPengguna} />
+                                        <Route path={`${this.match.path}/spop/tambah`} render={(props) => <TambahSpop {...props} parent_url={`${this.match.path}/spop`} />} />
+                                        <Route path={`${this.match.path}/lspop/tambah`} render={(props) => <TambahLspop {...props} parent_url={`${this.match.path}/lspop`} />} />
                                     </div>
                                 </div>
                             </Card>

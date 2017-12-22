@@ -121,6 +121,9 @@ router.post("/simpan_spop", upload.fields(spop_files), function (req, res) {
                 return res.json({ status: "ERRORFIELDS", fields: errorFields });
             }
             fields.push("file_izin_mendirikan_bangunan");
+            fields.push("nop");
+            fields.push("nop_bersama");
+            fields.push("nop_asal");
             body = Response.filterMethodField(body, fields);
             form.simpan_spop(body, (err, data) => {
                 if (err) {
@@ -151,6 +154,7 @@ router.post("/simpan_lspop", function (req, res) {
 
         Response.setRequiredPost(fields, body, (errorFields) => {
             if (errorFields.length) return res.json({ status: "ERRORFIELDS", fields: errorFields });
+            fields.push("nop");
             body = Response.filterMethodField(body, fields);
             form.simpan_lspop(body, (err, data) => {
                 res.json({
@@ -164,8 +168,8 @@ router.post("/simpan_lspop", function (req, res) {
     });
 });
 
-router.get("/uploads/:img", function (req, res) {
-    res.sendFile(path.resolve(__dirname, "..", "assets", "uploads", req.params.img));
+router.get("/uploads/:file", function (req, res) {
+    res.sendFile(path.resolve(__dirname, "..", "assets", "uploads", req.params.file));
 });
 
 router.get("/cek_status", function (req, res) {

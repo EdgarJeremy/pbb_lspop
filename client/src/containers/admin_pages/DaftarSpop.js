@@ -16,6 +16,9 @@ import Dialog from "material-ui/Dialog";
 import FlatButton from "material-ui/FlatButton";
 import Alert from "../../components/Alert";
 import config from "../../config.js";
+import { Link } from "react-router-dom";
+
+import FormEditSpop from "../../components/FormEditSpop";
 
 const dialogStyle = {
     dialogRoot: {
@@ -47,6 +50,7 @@ export default class DaftarSpop extends React.Component {
         ready: false,
         detail_popup: false,
         selected_spop_data: [],
+        selected_spop_object: {},
         attach_popup: false,
         attach_file: ""
     }
@@ -91,6 +95,7 @@ export default class DaftarSpop extends React.Component {
 
     constructor(props) {
         super(props);
+        this.match = props.match;
         this.ubah_page = this.ubah_page.bind(this);
     }
 
@@ -125,13 +130,18 @@ export default class DaftarSpop extends React.Component {
 
     open_detail(spop) {
         const selected_spop_data = [];
+        const selected_spop_object = {...spop};
+
         for (let data in spop) {
             if (spop.hasOwnProperty(data) && data !== "id_spop" && data !== "approved") {
                 selected_spop_data.push({ key: data, value: spop[data] });
             }
         }
-
-        this.setState({ detail_popup: true, selected_spop_data });
+        selected_spop_object.nop = selected_spop_object.nop.split(".");
+        selected_spop_object.nop_bersama = selected_spop_object.nop_bersama.split(".");
+        selected_spop_object.nop_asal = selected_spop_object.nop_asal.split(".");
+        
+        this.setState({ detail_popup: true, selected_spop_object, selected_spop_data });
     }
 
     open_attach(name) {
@@ -172,13 +182,26 @@ export default class DaftarSpop extends React.Component {
                 .setTitle("Approve gagal")
                 .setMessage(JSON.stringify(err))
                 .open();
-        })
+        });
     }
 
     render() {
         return (
             <div>
-                <h2 className="content-title">SPOP {(this.props.approved) ? "Terverifikasi" : "Masuk"}</h2>
+                <div className="content-head">
+                    <div className="left">
+                        <h2 className="content-title">SPOP {(this.props.approved) ? "Terverifikasi" : "Masuk"}</h2>
+                    </div>
+                    <div className="right">
+                        <Link to={`${this.match.path}/tambah`}>
+                            <RaisedButton
+                                icon={<i style={{ color: "#fff" }} className="material-icons">add_circle</i>}
+                                label="TAMBAH"
+                                backgroundColor="#3498db"
+                                labelColor="#fff" />
+                        </Link>
+                    </div>
+                </div>
                 <div className="content">
                     {
                         (!this.state.ready) ? <LoadingScreen color="#222" /> :
@@ -198,7 +221,7 @@ export default class DaftarSpop extends React.Component {
                                         {this.state.spops.map((spop, i) => (
                                             <TableRow key={i}>
                                                 {/* <TableRowColumn>{i + 1}</TableRowColumn> */}
-                                                <TableRowColumn>{spop.nop}</TableRowColumn>
+                                                <TableRowColumn>{spop.nop.split(".").join("")}</TableRowColumn>
                                                 <TableRowColumn>{spop.nama.toUpperCase()}</TableRowColumn>
                                                 <TableRowColumn>{spop.jalan_op.toUpperCase()}</TableRowColumn>
                                                 <TableRowColumn>{`${spop.rt}/${spop.rw}`}</TableRowColumn>
@@ -235,15 +258,19 @@ export default class DaftarSpop extends React.Component {
                                     subContainerClassName={"pages pagination"}
                                     activeClassName={"active"} />
                                 <Divider />
+                                {/* Data dialog */}
                                 <Dialog
+                                    contentStyle={{maxWidth: "2000px"}}
                                     autoScrollBodyContent={true}
-                                    title="Data SPOP"
+                                    title={<div>Data SPOP <b>{this.state.selected_spop_object.nomor_pendaftaran}</b></div>}
                                     actions={[
+                                        <FlatButton label="SIMPAN" onClick={() => this.refs.FormEditSpop.onSubmit()} />,
                                         <FlatButton label="TUTUP" onClick={() => this.setState({ detail_popup: false })} />
                                     ]}
                                     modal={false}
                                     open={this.state.detail_popup}>
-                                    <Table>
+                                    <FormEditSpop form_data={this.state.selected_spop_object} update_data={this.ambil_spop.bind(this)} ref="FormEditSpop" />
+                                    {/* <Table>
                                         <TableBody showRowHover displayRowCheckbox={false}>
                                             {this.state.selected_spop_data.map((data, i) => (
                                                 <TableRow key={i}>
@@ -256,8 +283,9 @@ export default class DaftarSpop extends React.Component {
                                                 </TableRow>
                                             ))}
                                         </TableBody>
-                                    </Table>
+                                    </Table> */}
                                 </Dialog>
+                                {/* Attachment dialog */}
                                 <Dialog
                                     contentStyle={dialogStyle.dialogContent}
                                     bodyStyle={dialogStyle.dialogBody}

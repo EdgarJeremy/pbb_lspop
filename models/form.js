@@ -37,6 +37,12 @@ const form = {
             });
         });
     },
+    edit_spop: function(newSpop,cb) {
+        Query.update("spop",newSpop,{id_spop: newSpop.id_spop},cb);
+    },
+    edit_lspop: function(newLspop,cb) {
+        Query.update("lspop",newLspop,{id_lspop: newLspop.id_lspop},cb);
+    },
     simpan_lspop: function(lspop, cb){
         this.generate_nomor_pendaftaran("lspop",(err,data) => {
             if(err) return cb(err);

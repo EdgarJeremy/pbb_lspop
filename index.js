@@ -7,20 +7,27 @@ const path = require("path");
 const app = express();
 const cors = require("cors");
 const session = require("express-session");
+const cookieParser = require("cookie-parser");
+const MemcachedStore = require("connect-memcached")(session);
 const pdf = require("express-pdf");
+
 const PORT = 3001;
 const ALLOW_ORIGIN = [
+    "http://192.168.137.218:3000",
+    "http://192.168.100.100:3000",
     "http://localhost",
     "http://localhost:3000",
     "http://118.97.134.116:3000",
     "http://36.67.90.85:3000",
     "http://192.168.100.102:3000",
     "http://192.168.137.1:3000",
+    "http://192.168.2.5:3000",
     "chrome-extension://fhbjgbiflinjbdggehcddcbncdddomop"
 ];
 
+app.use(cookieParser());
 app.use(bodyParser.urlencoded({
-    extended: true
+    extended: true 
 }));
 app.use(bodyParser.json());
 app.use(cors({
@@ -39,7 +46,11 @@ app.use(session({
         maxAge: 3600000
     },
     resave: true,
-    saveUninitialized: false
+    saveUninitialized: false,
+    // store: new MemcachedStore({
+    //     hosts: ['localhost:3001','127.0.0.1:3001'],
+    //     secret: "sherlocked221b#$;"
+    // });
 }));
 app.use(pdf);
 // app.use(express.static(path.resolve(__dirname,"client","build")));

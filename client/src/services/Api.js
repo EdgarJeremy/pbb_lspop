@@ -44,7 +44,7 @@ const Api = {
         }).then((response) => response.data);
     },
 
-    download_surat: (jenis_surat,nomor_pendaftaran) => {
+    download_surat: (jenis_surat, nomor_pendaftaran) => {
         return ax.get(`/download_surat/${jenis_surat}/${nomor_pendaftaran}`);
     },
 
